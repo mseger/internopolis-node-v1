@@ -130,7 +130,8 @@ exports.asyncHouseScrape = function(req, res){
           });
 			}],
       displaying_listings: ["mapping_listings", function(callback, results){
-        res.redirect('/');
+      	console.log("THE HOUSING LISTINGS ARE: ", allListings);
+        res.render('displayHousing', {title: "Housing Options", housingOptions: allListings});
         callback(null, 'done');
       }]
   }, function (err, result) {

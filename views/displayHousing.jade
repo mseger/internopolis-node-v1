@@ -1,0 +1,14 @@
+extends layout
+
+block content
+	h1= title
+	p Welcome to #{title}
+
+
+	each option, i in housingOptions
+		div.row(value=option.address, id="house-address")
+			div.span8.offset6
+				h2 #{option.description}
+
+				h3 #{option.lat}
+				h3 #{option.lon}

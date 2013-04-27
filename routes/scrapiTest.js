@@ -48,6 +48,18 @@ var individualManifest = {
         "$each": {
           "href": "(attr href)"
         }
+      }, 
+      address: {
+        "$query": "#attributes", 
+        "$value": "(text)"
+      }, 
+      lat: {
+        "$query": "#leaflet",
+        "$value": "(attr data-latitude)"
+      }, 
+      lon: {
+        "$query": "#leaflet", 
+        "$value": "(attr data-longitude)"
       }
     }
   }
@@ -88,7 +100,7 @@ exports.scrapiTest3 = function(req, res){
         individualAPI(link.substring(28)).get(function (err, listingJSON){
           if(err)
             console.log("Error using second call of scrapi: ", err);
-          console.log(listingJSON);
+          console.log("Latitude: ", listingJSON.lat, listingJSON.lon);
         });
       }
     }

@@ -5,10 +5,12 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+  , http = require('http')
+  , path = require('path')
   , googleMapsTest = require('./routes/googleMapsTest')
   , scrapiTest = require('./routes/scrapiTest')
-  , http = require('http')
-  , path = require('path');
+  , housing = require('./routes/housing')
+  , mongoose = require('mongoose');
 
 var app = express();
 
@@ -28,15 +30,20 @@ app.configure(function(){
 
 app.configure('development', function(){
   app.use(express.errorHandler());
+  mongoose.connect(process.env.MONGOLAB_URI || 'localhost');
 });
 
 // GETS
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.get('/mapsTest', googleMapsTest.mapsTest2);
-app.get('/scrapiTest', scrapiTest.scrapiTest3);
+app.get('/housing', housing.houseScrape);
 
 // PUTS
+
+// TESTS
+app.get('/mapsTest', googleMapsTest.mapsTest2);
+app.get('/scrapiTest', scrapiTest.scrapiTest3);
+app.get('/asyncScrapeTest', housing.asyncHouseScrape);
 
 
 http.createServer(app).listen(app.get('port'), function(){

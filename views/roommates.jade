@@ -15,7 +15,7 @@ block content
 
 	div.row
 		div.span5.offset1(id="roommate_search")
-			form(name="roommate-criteria", action="/roommates/" + currUser.id + "/search", method="post")
+			form(name="roommate-criteria", action="/roommates/search", method="post")
 				h3 Search for 
 				label City: 
 				input(type="text", name="city")
@@ -30,12 +30,11 @@ block content
 					option(value="12 AM") 12 AM 
 					option(value="1 AM") 1 AM 
 					option(value="2 AM or after") 2 AM or after
-				input(type="text", name="bedtime")
 				label House Parties: 
 				input(type="checkbox", name="house-parties")
 				br
 				br
-				button.btn(type="submit", id="yelp-search-submit")
+				button.btn(type="submit", id="roommate-search-submit")
 					i.icon-search
 					|  Search
 

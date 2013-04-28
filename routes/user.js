@@ -4,28 +4,23 @@ var User = require('../models/User')
 exports.login = function (req, res) {
   req.facebook.api('/me', function(err, data){
   	req.facebook.api('/me/friends?fields=id,name', function(err, friendData){
-  		console.log("FACEBOOK DATA WE GET IS: ", friendData);
-  		res.redirect('/');
-  		/*req.facebook.api('/2609078152906/photos', function(err, pics){
+  		//console.log("FACEBOOK DATA WE GET IS: ", friendData);
+  		req.facebook.api('/me/picture?redirect=false&type=large', function(err, picData){
 	  		var existentUser = User.findOne({name: data.name}, function (err, user){
 	  			if(user){
 	  				req.session.user = user;
 	  				res.redirect('/homepage');
 		  		}else{
-		  			var pics_array = [];
-		  			for(var i=0; i<pics.data.length; i++){
-		  				pics_array.push(pics.data[i]);
-		  			};
-		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url});
+		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url, friends: friendData.data});
 		  			loggedInUser.save(function (err){
-				  			if(err)
-				  				console.log("Unable to save new user.");
-				  		 	req.session.user = loggedInUser; 
-				  			res.redirect('/homepage');
+			  			if(err)
+			  				console.log("Unable to save new user.");
+			  		 	req.session.user = loggedInUser; 
+			  			res.redirect('/');
 		  			});
 		  		}
 		  	});
-	  	});*/
+	  	});
   	});
   });
 };
@@ -39,7 +34,7 @@ exports.logout = function(req, res){
 // delete all users
 exports.delete_all = function(req, res){
 	// clears out your list so you can start from scratch
-	FBUser.remove({}, function(err) { 
+	User.remove({}, function(err) { 
    		console.log('collection removed');
    		res.redirect('/');
 	});

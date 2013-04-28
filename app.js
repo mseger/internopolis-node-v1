@@ -42,11 +42,11 @@ global.scope = ['read_friendlists', 'publish_stream', 'friends_location'];
 // GETS
 app.get('/', splash.splashLoginPage);
 app.get('/login', Facebook.loginRequired({scope: scope}), user.login);
+app.get('/users/delete_all', user.delete_all);
 app.get('/housing', housing.houseScrape);
 
 // PUTS
 app.post('/login', Facebook.loginRequired({scope: scope}), user.login);
-
 
 // TESTS
 app.get('/mapsTest', googleMapsTest.mapsTest2);

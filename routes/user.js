@@ -4,19 +4,18 @@ var User = require('../models/User')
 exports.login = function (req, res) {
   req.facebook.api('/me', function(err, data){
   	req.facebook.api('/me/friends?fields=id,name', function(err, friendData){
-  		//console.log("FACEBOOK DATA WE GET IS: ", friendData);
   		req.facebook.api('/me/picture?redirect=false&type=large', function(err, picData){
 	  		var existentUser = User.findOne({name: data.name}, function (err, user){
 	  			if(user){
 	  				req.session.user = user;
-	  				res.redirect('/homepage');
+	  				res.redirect('/roommates');
 		  		}else{
 		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url, friends: friendData.data});
 		  			loggedInUser.save(function (err){
 			  			if(err)
 			  				console.log("Unable to save new user.");
 			  		 	req.session.user = loggedInUser; 
-			  			res.redirect('/');
+			  			res.redirect('/roommates');
 		  			});
 		  		}
 		  	});

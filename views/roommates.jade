@@ -1,0 +1,44 @@
+extends layout
+
+block content
+	title= title
+	div.row
+		div.span6.offset1(value= currUser, id="welcome-roommates-dialog")
+			h1 Welcome, #{currUser.name}
+			img(src="#{currUser.profPicURL}")
+			br
+			br
+		form(name="logout-form", action="/logout", method="post")
+				button.btn(type="submit", id="room-logout-button")
+					i.icon-cog
+					| Log out
+
+	div.row
+		div.span5.offset1(id="roommate_search")
+			form(name="roommate-criteria", action="/roommates/" + currUser.id + "/search", method="post")
+				h3 Search for 
+				label City: 
+				input(type="text", name="city")
+				label I am: 
+				select(name="cleanliness")
+					option(value="Very Neat") Very Neat
+					option(value="Messy") Messy
+					option(value="Meh") Meh
+				label I go to bed at: 
+				select(name="bedtime")
+					option(value="11 PM") 11 PM
+					option(value="12 AM") 12 AM 
+					option(value="1 AM") 1 AM 
+					option(value="2 AM or after") 2 AM or after
+				input(type="text", name="bedtime")
+				label House Parties: 
+				input(type="checkbox", name="house-parties")
+				br
+				br
+				button.btn(type="submit", id="yelp-search-submit")
+					i.icon-search
+					|  Search
+
+		include _roommate_results
+
+

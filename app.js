@@ -45,13 +45,13 @@ app.get('/', splash.splashLoginPage);
 app.get('/login', Facebook.loginRequired({scope: scope}), user.login);
 app.get('/users/delete_all', user.delete_all);
 app.get('/roommates', Facebook.loginRequired({scope: scope}), roommates.displaySurvey);
-app.get('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.calculateAndDisplayOptions);
+app.get('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.asyncRoommateCalculation);
 app.get('/housing', housing.houseScrape);
 
 // PUTS
 app.post('/login', Facebook.loginRequired({scope: scope}), user.login);
 app.post('/logout', Facebook.loginRequired(), user.logout);
-app.post('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.calculateAndDisplayOptions);
+app.post('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.asyncRoommateCalculation);
 
 
 // TESTS

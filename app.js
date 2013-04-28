@@ -7,10 +7,12 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
+  , splash = require('./routes/splash')
   , googleMapsTest = require('./routes/googleMapsTest')
   , scrapiTest = require('./routes/scrapiTest')
   , housing = require('./routes/housing')
-  , mongoose = require('mongoose');
+  , mongoose = require('mongoose')
+  , Facebook = require('facebook-node-sdk');
 
 var app = express();
 
@@ -24,6 +26,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
   app.use(express.session());
+  app.use(Facebook.middleware({appId: process.env.FACEBOOK_APPID, secret: process.env.FACEBOOK_SECRET}));
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -33,12 +36,17 @@ app.configure('development', function(){
   mongoose.connect(process.env.MONGOLAB_URI || 'localhost');
 });
 
+// global for FB permissions
+global.scope = ['read_friendlists', 'publish_stream', 'friends_location'];
+
 // GETS
-app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/', splash.splashLoginPage);
+app.get('/login', Facebook.loginRequired({scope: scope}), user.login);
 app.get('/housing', housing.houseScrape);
 
 // PUTS
+app.post('/login', Facebook.loginRequired({scope: scope}), user.login);
+
 
 // TESTS
 app.get('/mapsTest', googleMapsTest.mapsTest2);

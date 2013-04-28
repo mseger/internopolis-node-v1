@@ -2,7 +2,7 @@ var User = require('../models/User')
 var async = require('async')
 
 exports.displaySurvey = function(req, res){
-	res.render('roommates', {title: "Roommate Finder", currUser: req.session.user});
+	res.render('roommates', {title: "Roommate Finder", currUser: req.session.user, matches: []});
 }
 
 exports.calculateAndDisplayOptions = function(req, res){
@@ -34,8 +34,8 @@ exports.asyncRoommateCalculation = function(req, res){
 				req.facebook.api("/" + item.id + "?fields=id,name,location", function (err, friend){
 					if(err)
 						console.log("Error looking up friend: ", err);
-					if(friend.location != undefined){
-						roommateFits.push(friend.location);
+					if(friend.location != undefined && friend.location.name.split(',')[0] == req.body.city){
+						roommateFits.push(friend);
 						next();
 					}else{
 						next();
@@ -45,6 +45,7 @@ exports.asyncRoommateCalculation = function(req, res){
 		});  
 	}, 
       displaying_matches: ["calculating_matches", function(callback, results){
+        res.render('_roommate_results', {matches: roommateFits});
         callback(null, 'done');
       }]
   }, function (err, result) {

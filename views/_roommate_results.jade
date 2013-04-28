@@ -1,1 +1,5 @@
-h1 hi
+each match, i in matches
+	div.row(value=match._id, id="roommate-match")
+		div.span8.offset6
+			h2 #{match.name}
+			img(src="https://graph.facebook.com/"+"#{match.id}"+"/picture", id="match-pic")

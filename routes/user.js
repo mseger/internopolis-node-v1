@@ -10,7 +10,7 @@ exports.login = function (req, res) {
 	  				req.session.user = user;
 	  				res.redirect('/roommates');
 		  		}else{
-		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url, friends: friendData.data});
+		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url, friends: friendData.data, roommate_matches: [], lastSearchedCity: ""});
 		  			loggedInUser.save(function (err){
 			  			if(err)
 			  				console.log("Unable to save new user.");

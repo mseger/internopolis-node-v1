@@ -84,12 +84,22 @@ exports.asyncHouseScrape = function(req, res){
   var allListings_asObjects = [];
   async.auto({
       clearing_listings: function(callback){
-        // too old, delete all old ones and re-scrape
-        HousingListing.remove({}, function(err){
-        	if(err)
-        		console.log("Unable to purge HousingListing DB: ", err);
-          // if successful
-          callback(null);   
+        // if stored listings are recent enough, just surface those
+        var aListing = HousingListing.find().exec(function (err, listings){
+          if(err)
+            console.log("Unable to retrieve housing listings ", err); 
+          var time = Date.now();
+          if((listings.length) >0 && listings[0].timestamp- time < 3600000){
+            res.render('displayHousing', {title: "Housing", housingOptions: listings});
+          }else{
+            // too old, delete all old ones and re-scrape
+            HousingListing.remove({}, function(err){
+              if(err)
+                console.log("Unable to purge HousingListing DB: ", err);
+              // if successful
+              callback(null);   
+            });
+          }
         });
       }, 
       scraping_listings: ["clearing_listings", function(callback){

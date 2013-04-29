@@ -37,7 +37,6 @@ exports.asyncRoommateCalculation = function(req, res){
 			});  
 		}, 
 		  saving_matches: ["calculating_matches", function(callback){
-		  	console.log("Made it into saving_matches");
 		  	var userToUpdate = User.findOne({name: req.session.user.name}).exec(function (req3, toUpdate){
 		  		toUpdate.roommate_matches = roommateFits;
 		  		toUpdate.lastSearchedCity = req.body.city;
@@ -49,8 +48,7 @@ exports.asyncRoommateCalculation = function(req, res){
 		  	});
 		  }], 
 	      displaying_matches: ["saving_matches", function(callback, results){
-	        console.log("Made it into displaying_matches");
-	        res.render('_roommate_results', {currUser: req.session.user, matches: roommateFits});
+	        res.render('roommates', {title: "Roommate Matches", currUser: req.session.user, matches: roommateFits});
 	        callback(null, 'done');
 	      }]
 	  }, function (err, result) {

@@ -9,13 +9,14 @@ h1 Your matches in #{currUser.lastSearchedCity}:
                     img(src="https://graph.facebook.com/"+"#{match.id}"+"/picture?type=large", id="match-pic")
                     br
                     center
+                        h4 #{match.name}
                         //a(href="https://facebook.com/" + "#{match.id}", target="_blank") #{match.name}
                         br
                         .btn-group
-                            button.btn
+                            button.btn(class="goToMatchFB", value="#{match.id}")
                                 i.icon-thumbs-up
                             button.btn 
                                 i.icon-pencil
                             button.btn 
-                                i.icon-star
+                                i.icon-plus
 

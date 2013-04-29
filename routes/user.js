@@ -3,7 +3,8 @@ var User = require('../models/User')
 // login a new user, start a new session
 exports.login = function (req, res) {
   req.facebook.api('/me', function(err, data){
-  	req.facebook.api('/me/friends?fields=id,name', function(err, friendData){
+  	req.facebook.api('/me/friends?fields=id,name,location', function(err, friendData){
+  		console.log("FRIEND DATA IS: ", friendData);
   		req.facebook.api('/me/picture?redirect=false&type=large', function(err, picData){
 	  		var existentUser = User.findOne({name: data.name}, function (err, user){
 	  			if(user){

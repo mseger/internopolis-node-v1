@@ -29,20 +29,15 @@ exports.asyncRoommateCalculation = function(req, res){
 			currUser = User.findOne({name: req.session.user.name}).exec(function (req2, user){
 				var friendList = user.friends; 
 				async.each(friendList, function(item, next){
-					req.facebook.api("/" + item.id + "?fields=id,name,location", function (err, friend){
-						if(err)
-							console.log("Error looking up friend: ", err);
-						if(friend.location != undefined && friend.location.name.split(',')[0] == req.body.city){
-							roommateFits.push(friend);
-							next();
-						}else{
-							next();
-						}
-					});
+					if(item.location && item.location.name.split(',')[0] == req.body.city){
+						roommateFits.push(item);
+					}
+					next();
 				}, callback);
 			});  
 		}, 
 		  saving_matches: ["calculating_matches", function(callback){
+		  	console.log("Made it into saving_matches");
 		  	var userToUpdate = User.findOne({name: req.session.user.name}).exec(function (req3, toUpdate){
 		  		toUpdate.roommate_matches = roommateFits;
 		  		toUpdate.lastSearchedCity = req.body.city;
@@ -54,6 +49,7 @@ exports.asyncRoommateCalculation = function(req, res){
 		  	});
 		  }], 
 	      displaying_matches: ["saving_matches", function(callback, results){
+	        console.log("Made it into displaying_matches");
 	        res.render('_roommate_results', {currUser: req.session.user, matches: roommateFits});
 	        callback(null, 'done');
 	      }]

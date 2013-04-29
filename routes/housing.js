@@ -1,7 +1,7 @@
 var scrapi = require('scrapi')
 var async = require('async')
 var HousingListing = require('../models/housingListing')
-
+var User = require('../models/User')
 
 // scrape just the links to leads manifest
 var linksManifest = {
@@ -71,7 +71,6 @@ exports.houseScrape = function(req, res){
           newHousingListing.save(function(err){
           	if(err)
           		console.log("Unable to save new listing: ", err);
-          	console.log("Successful Save: ", newHousingListing.address);
           });
         });
       }
@@ -82,13 +81,15 @@ exports.houseScrape = function(req, res){
 // using async to scrape and display properly 
 exports.asyncHouseScrape = function(req, res){
 	var allListings = [];
+  var allListings_asObjects = [];
   async.auto({
       clearing_listings: function(callback){
+        // too old, delete all old ones and re-scrape
         HousingListing.remove({}, function(err){
         	if(err)
         		console.log("Unable to purge HousingListing DB: ", err);
           // if successful
-          callback(null);    
+          callback(null);   
         });
       }, 
       scraping_listings: ["clearing_listings", function(callback){
@@ -118,23 +119,48 @@ exports.asyncHouseScrape = function(req, res){
 			mapping_listings: ["scraping_listings", function(callback){
 			    async.map(allListings, function (currListing, next) {
 	          // create a new HousingListing entry 
-	          var newHousingListing = new HousingListing({description: currListing.description, image_URLs: currListing.images, address: currListing.address, lat: currListing.lat, lon: currListing.lon});
+            var currTime = Date.now();
+	          var newHousingListing = new HousingListing({description: currListing.description, image_URLs: currListing.images, address: currListing.address, lat: currListing.lat, lon: currListing.lon, timestamp: currTime});
 	          newHousingListing.save(function(err){
 	            if(err)
 	              console.log("Couldn't save new housing listing: ", err);
-	            next(null);
+	            allListings_asObjects.push(newHousingListing);
+              next(null);
             });
           }, function (err, results) {
             // all done with each of them
             callback(null, results);
           });
 			}],
-      displaying_listings: ["mapping_listings", function(callback, results){
-      	console.log("THE HOUSING LISTINGS ARE: ", allListings);
-        res.render('displayHousing', {title: "Housing Options", housingOptions: allListings});
+      updating_user_listings: ["mapping_listings", function(callback){
+        var currentUser = User.findOne({name: req.session.user.name}).exec(function (err, currUser){
+          currUser.housing_listings = allListings_asObjects;
+          currUser.save(function (err2){
+            if(err)
+              console.log("Unable to save housing listings for user", err2);
+            callback(null);
+          });
+        });
+      }],
+      displaying_listings: ["updating_user_listings", function(callback, results){
+        res.render('displayHousing', {title: "Housing", housingOptions: allListings});
         callback(null, 'done');
       }]
   }, function (err, result) {
       console.log("Finished async house scraping + displaying");   
   });
 }
+
+// delete all housing listings
+exports.delete_all = function(req, res){
+  // clears out your list so you can start from scratch
+  HousingListing.remove({}, function(err) { 
+      console.log('housing collection emptied');
+      res.redirect('/');
+  });
+};
+
+
+
+
+

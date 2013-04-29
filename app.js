@@ -8,6 +8,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , splash = require('./routes/splash')
+  , home = require('./routes/home')
   , roommates = require('./routes/roommates')
   , googleMapsTest = require('./routes/googleMapsTest')
   , scrapiTest = require('./routes/scrapiTest')
@@ -46,7 +47,9 @@ app.get('/login', Facebook.loginRequired({scope: scope}), user.login);
 app.get('/users/delete_all', user.delete_all);
 app.get('/roommates', Facebook.loginRequired({scope: scope}), roommates.displaySurvey);
 app.get('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.asyncRoommateCalculation);
-app.get('/housing', housing.houseScrape);
+app.get('/housing', Facebook.loginRequired({scope: scope}), housing.asyncHouseScrape);
+app.get('/housing/delete_all', housing.delete_all);
+app.get('/home', Facebook.loginRequired({scope: scope}), home.displayHome);
 
 // PUTS
 app.post('/login', Facebook.loginRequired({scope: scope}), user.login);

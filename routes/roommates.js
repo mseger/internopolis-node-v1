@@ -13,10 +13,8 @@ exports.calculateAndDisplayOptions = function(req, res){
 			req.facebook.api("/" + friendList[i].id + "?fields=id,name,location", function (err, friend){
 				if(err)
 					console.log("Error looking up friend: ", err);
-				console.log("FRIEND: ", friend.location);
 			});
 		}
-		//res.redirect('/roommates');
 	});
 }
 
@@ -28,7 +26,6 @@ exports.asyncRoommateCalculation = function(req, res){
   	async.auto({
 	      calculating_matches: function(callback){
 		 	// look up user, look up their friends
-		 	console.log("Entering step 1");
 			currUser = User.findOne({name: req.session.user.name}).exec(function (req2, user){
 				var friendList = user.friends; 
 				async.each(friendList, function(item, next){

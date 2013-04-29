@@ -5,6 +5,7 @@ var UserSchema = new Schema({
 	profPicURL: String, 
 	friends: [],
 	roommate_matches: [], 
+	housing_listings: [],
 	lastSearchedCity: String
 });
 

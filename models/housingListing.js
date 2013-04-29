@@ -5,7 +5,8 @@ var HousingListingSchema = new Schema({
 	image_URLs: [String], 
 	address: String, 
 	lat: Number, 
-	lon: Number, 
+	lon: Number,
+	timestamp: Number 
 });
 
 var HousingListing = mongoose.model('HousingListing', HousingListingSchema);

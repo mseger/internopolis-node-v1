@@ -8,14 +8,14 @@ exports.login = function (req, res) {
 	  		var existentUser = User.findOne({name: data.name}, function (err, user){
 	  			if(user){
 	  				req.session.user = user;
-	  				res.redirect('/roommates');
+	  				res.redirect('/home');
 		  		}else{
-		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url, friends: friendData.data, roommate_matches: [], lastSearchedCity: ""});
+		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url, friends: friendData.data, roommate_matches: [], housing_listings: [], lastSearchedCity: ""});
 		  			loggedInUser.save(function (err){
 			  			if(err)
 			  				console.log("Unable to save new user.");
 			  		 	req.session.user = loggedInUser; 
-			  			res.redirect('/roommates');
+			  			res.redirect('/home');
 		  			});
 		  		}
 		  	});
@@ -34,7 +34,7 @@ exports.logout = function(req, res){
 exports.delete_all = function(req, res){
 	// clears out your list so you can start from scratch
 	User.remove({}, function(err) { 
-   		console.log('collection removed');
+   		console.log('user collection removed');
    		res.redirect('/');
 	});
 };

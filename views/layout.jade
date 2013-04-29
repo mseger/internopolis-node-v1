@@ -3,7 +3,32 @@ html
   head
     title= title
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
-    link(href="//netdna.bootstrapcdn.com/bootswatch/2.3.0/journal/bootstrap.min.css", rel="stylesheet")
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href="//netdna.bootstrapcdn.com/bootswatch/2.3.0/journal/bootstrap.min.css", rel="stylesheet")
+  
+    .navbar.navbar-inverse.navbar-fixed-top
+      .navbar-inner
+        .container
+          button.btn.btn-navbar(type='button', data-toggle='collapse', data-target='.nav-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.brand(href='/') Internopolis
+          .nav-collapse.collapse
+            ul.nav
+              li.active
+                a(href='/home') Home
+              li
+                a(href='/housing') Housing
+              li
+                a(href='/roommates') Roommates
+              li 
+                a(href='#management') Management
+
+
+            form.navbar-form.pull-right(name="fb-login", action="/login", method="post")
+              input.btn(type="submit", value="Login with Facebook")
+
   body
     block content
+

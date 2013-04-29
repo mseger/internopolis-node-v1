@@ -13,7 +13,6 @@ block content
 					i.icon-cog
 					| Log out
 
-	div.row
 		div.span5.offset1(id="roommate_search")
 			form(name="roommate-criteria", action="/roommates/search", method="post")
 				h3 Search for 
@@ -38,6 +37,6 @@ block content
 					i.icon-search
 					|  Search
 
-		include _roommate_results
+	include _roommate_results
 
 

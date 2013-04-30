@@ -17,7 +17,7 @@ block content
 				| #{option.description}
 				br
 				br
-				if option.image_URLs[0] != undefined
+				if option.image_URLs != undefined
 					each image, j in option.image_URLs
 						if option.image_URLs[j] != undefined
 							img(src="#{option.image_URLs[j]}", id="housing-listing-image")

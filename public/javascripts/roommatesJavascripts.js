@@ -8,5 +8,4 @@ $(function () {
     alert("Added to your Starred Potential Roommates");
     return false;
   })
-
 })

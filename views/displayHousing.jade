@@ -2,7 +2,7 @@ extends layout
 
 block content
     each option, i in housingOptions
-        div.row(value=option, id="craigslist-object")
+        div.row(value=option, id="craigslist-object;", style="margin-top: 50px")
             div.span8.offset6.well
                 if option.address != undefined
                     h2 Address: 
@@ -23,5 +23,5 @@ block content
                         i.icon-thumbs-up
                     button.btn 
                         i.icon-pencil
-                    button.btn 
+                    button.btn(class="addToStarredHousing", value="#{option.description}")
                         i.icon-plus

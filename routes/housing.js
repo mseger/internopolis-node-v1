@@ -170,6 +170,30 @@ exports.asyncHouseScrape = function(req, res){
   });
 }
 
+// add a housing listing to your list of starred housing listings
+// FOR NEXT TIME START HERE
+exports.addStarredHousingListing = function(req, res){
+  currUser = User.findOne({name: req.session.user.name}).exec(function (err, user){
+    if(err)
+      console.log("Unable to edit starred roommates list: ", err);
+    var starredRoommates = user.starred_roommates;
+
+    // look up or create a FBOnlyUser 
+    var fbUser = FBOnlyUser.findOne({FBID: req.body.id}).exec(function (err, FBUser){
+      if(err)
+        console.log("Error in retrieving FBUser: ", err);
+      // user already exists, just add them to modified starred list
+      starredRoommates.push(FBUser);
+      user.starred_roommates = starredRoommates;
+      user.save(function (err){
+        if(err)
+          console.log("Unable to save modified starred roommates list: ", err);
+        res.redirect('/roommates');
+      });
+    });
+  });
+}
+
 // delete all housing listings
 exports.delete_all = function(req, res){
   // clears out your list so you can start from scratch

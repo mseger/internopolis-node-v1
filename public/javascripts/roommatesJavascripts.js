@@ -3,10 +3,9 @@ $(function () {
     window.open("https://facebook.com/" + this.value);
   });
 
-  $('.addToFavoriteRoommates').on('submit', function () {
-    $.post("/orders/delete", $(this).serialize());
-    alert("Order Completed");
-    $(this).parent.remove();
+  $('.addToStarredRoommates').click(function () {
+    $.post("/starred_roommates/add", {id: this.value});
+    alert("Added to your Starred Potential Roommates");
     return false;
   })
 

@@ -51,12 +51,13 @@ app.get('/housing', Facebook.loginRequired({scope: scope}), housing.asyncHouseSc
 app.get('/housing/delete_all', housing.delete_all);
 app.get('/craigslistobjects/delete_all', housing.delete_all_CraigslistObjects);
 app.get('/home', Facebook.loginRequired({scope: scope}), home.displayHome);
+app.get('/FBOnlyUsers/delete_all', user.delete_all_FBOnlyUsers);
 
 // PUTS
 app.post('/login', Facebook.loginRequired({scope: scope}), user.login);
 app.post('/logout', Facebook.loginRequired(), user.logout);
 app.post('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.asyncRoommateCalculation);
-
+app.post('/starred_roommates/add', Facebook.loginRequired({scope: scope}), roommates.addStarredRoommate);
 
 // TESTS
 app.get('/mapsTest', googleMapsTest.mapsTest2);

@@ -2,4 +2,8 @@ extends layout
 
 block content
 	title= title
-	
+
+	each roommate, i in starred_roommates
+		| #{roommate.name}
+		img(src="#{roommate.profPicURL}")
+		

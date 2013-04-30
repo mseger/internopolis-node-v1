@@ -7,16 +7,16 @@ h1 Your Matches:
         .row(style="margin-bottom: 20px")
             each match, i in matches
                 .well.span3(value=match._id, id="roommate-match", style="margin-bottom: 50px")
-                    img(src="https://graph.facebook.com/"+"#{match.id}"+"/picture?type=large", id="match-pic")
+                    img(src="#{match.profPicURL}", id="match-pic")
                     br
                     center
                         h4 #{match.name}
                         br
                         .btn-group
-                            button.btn(class="goToMatchFB", value="#{match.id}")
+                            button.btn(class="goToMatchFB", value="#{match.FBID}")
                                 i.icon-thumbs-up
                             button.btn 
                                 i.icon-pencil
-                            button.btn(class="addToFavoriteRoommates", value="#{match.id}")
+                            button.btn(class="addToStarredRoommates", value="#{match.FBID}")
                                 i.icon-plus
 

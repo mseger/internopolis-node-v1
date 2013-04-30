@@ -1,8 +1,13 @@
 var User = require('../models/User')
+var FBOnlyUser = require('../models/user_FB_only')
 var async = require('async')
 
 exports.displaySurvey = function(req, res){
-	res.render('roommates', {title: "Roommate Finder", currUser: req.session.user, matches: req.session.user.roommate_matches});
+	User.findOne({name: req.session.user.name}).populate('roommate_matches').exec(function (err, user){
+		if(err)
+			console.log("Unable to display user's home: ", err);
+		res.render('roommates', {title: "Roommate Finder", currUser: req.session.user, matches: user.roommate_matches});
+	});
 }
 
 exports.calculateAndDisplayOptions = function(req, res){
@@ -30,7 +35,12 @@ exports.asyncRoommateCalculation = function(req, res){
 				var friendList = user.friends; 
 				async.each(friendList, function(item, next){
 					if(item.location && item.location.name.split(',')[0] == req.body.city){
-						roommateFits.push(item);
+						var newFBUser = new FBOnlyUser({name: item.name, FBID: item.id, profileURL: item.link, profPicURL: "https://graph.facebook.com/"+ item.id +"/picture?type=large", location: item.location.name});
+						newFBUser.save(function (err){
+							if(err)
+								console.log("Couldn't save new FBUser");
+							roommateFits.push(newFBUser);
+						});
 					}
 					next();
 				}, callback);
@@ -42,7 +52,7 @@ exports.asyncRoommateCalculation = function(req, res){
 		  		toUpdate.lastSearchedCity = req.body.city;
 		  		toUpdate.save(function (err){
 		  			if(err)
-		  				console.log("Unable to save matches list");
+		  				console.log("Unable to save matches list", err);
 		  			callback(null);
 		  		});
 		  	});
@@ -55,3 +65,30 @@ exports.asyncRoommateCalculation = function(req, res){
 	      console.log("Finished async house scraping + displaying");   
   	});
 }
+
+// add a roommate to your starred roommates list
+exports.addStarredRoommate = function(req, res){
+	currUser = User.findOne({name: req.session.user.name}).exec(function (err, user){
+		if(err)
+			console.log("Unable to edit starred roommates list: ", err);
+		var starredRoommates = user.starred_roommates;
+
+		// look up or create a FBOnlyUser 
+		var fbUser = FBOnlyUser.findOne({FBID: req.body.id}).exec(function (err, FBUser){
+			if(err)
+				console.log("Error in retrieving FBUser: ", err);
+			// user already exists, just add them to modified starred list
+			starredRoommates.push(FBUser);
+			user.starred_roommates = starredRoommates;
+			user.save(function (err){
+				if(err)
+					console.log("Unable to save modified starred roommates list: ", err);
+				res.redirect('/roommates');
+			});
+		});
+	});
+}
+
+
+
+

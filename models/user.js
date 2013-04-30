@@ -4,9 +4,9 @@ var UserSchema = new Schema({
 	name: String, 
 	profPicURL: String, 
 	friends: [],
-	roommate_matches: [], 
+	roommate_matches: [{type: Schema.Types.ObjectId, ref: 'FBOnlyUser'}], 
 	housing_listings: [],
-	starred_roommates: [],
+	starred_roommates: [{type: Schema.Types.ObjectId, ref: 'FBOnlyUser'}],
 	starred_housingListings: [],
 	lastSearchedCity: String
 });

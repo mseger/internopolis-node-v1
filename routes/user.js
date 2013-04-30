@@ -1,4 +1,5 @@
 var User = require('../models/User')
+var FBOnlyUser = require('../models/user_FB_only')
 
 // login a new user, start a new session
 exports.login = function (req, res) {
@@ -35,6 +36,15 @@ exports.delete_all = function(req, res){
 	// clears out your list so you can start from scratch
 	User.remove({}, function(err) { 
    		console.log('user collection removed');
+   		res.redirect('/');
+	});
+};
+
+// delete all FBOnlyUsers
+exports.delete_all_FBOnlyUsers = function(req, res){
+	// clears out your list so you can start from scratch
+	FBOnlyUser.remove({}, function(err) { 
+   		console.log('FBOnly user collection removed');
    		res.redirect('/');
 	});
 };

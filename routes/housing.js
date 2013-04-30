@@ -139,6 +139,7 @@ exports.asyncHouseScrape = function(req, res){
                 parsed_imageURLs.push(currListing.images[i].href);
               }
             }
+            // NEED TO ADD LOGIC IN HERE TO PREVENT REPEAT LISTINGS
 	          var newHousingListing = new HousingListing({description: currListing.description, image_URLs: parsed_imageURLs, address: currListing.address, lat: currListing.lat, lon: currListing.lon, timestamp: currTime});
 	          newHousingListing.save(function(err){
 	            if(err)

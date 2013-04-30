@@ -2,8 +2,12 @@ extends layout
 
 block content
     title= title
-    
-    .row(style="margin-bottom: 20px; text-align: center; margin-left: 100px")
+    .row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
+        h2 Welcome to Your Internopolis
+        br
+        h4 Your personal pinboard of housing and roommate listings. 
+        | Your current starred listings are:  
+    .row(style="margin-top: 50px; margin-bottom: 20px; text-align: center; margin-left: 100px")
         each roommate, i in starred_roommates
             .well.span3(value=roommate, id="starred-roommate", style="margin-bottom: 50px")
                 img(src="#{roommate.profPicURL}", style="width:200px; height:200px")

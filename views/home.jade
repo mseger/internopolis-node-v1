@@ -1,9 +1,16 @@
 extends layout
 
 block content
-	title= title
+    title= title
+    
+    .row(style="margin-bottom: 20px")
+    each roommate, i in starred_roommates
+        .well.span3(value=roommate, id="starred-roommate", style="margin-bottom: 50px")
+            img(src="#{roommate.profPicURL}", style="width:200px; height:200px")
+            br
+            center
+                h4 #{roommate.name}
 
-	each roommate, i in starred_roommates
-		| #{roommate.name}
-		img(src="#{roommate.profPicURL}")
-		
+
+
+

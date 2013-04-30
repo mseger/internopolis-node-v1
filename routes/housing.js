@@ -1,7 +1,11 @@
 var scrapi = require('scrapi')
 var async = require('async')
 var HousingListing = require('../models/housingListing')
+var CraigslistObject = require('../models/craigslistObject')
 var User = require('../models/User')
+var craigslist = require('craigslist');
+
+///////////////////////////MANUAL SCRAPING//////////////////////////////////////////////
 
 // scrape just the links to leads manifest
 var linksManifest = {
@@ -49,7 +53,6 @@ var individualManifest = {
   }
 };
 
-
 // trying to refine our search and query each one for info 
 exports.houseScrape = function(req, res){
   var api = scrapi(linksManifest);
@@ -89,7 +92,7 @@ exports.asyncHouseScrape = function(req, res){
           if(err)
             console.log("Unable to retrieve housing listings ", err); 
           var time = Date.now();
-          if((listings.length) >0 && listings[0].timestamp- time < 3600000){
+          if((listings.length) >0 && time - listings[0].timestamp < 36000000){
             res.render('displayHousing', {title: "Housing", housingOptions: listings});
           }else{
             // too old, delete all old ones and re-scrape
@@ -130,7 +133,14 @@ exports.asyncHouseScrape = function(req, res){
 			    async.map(allListings, function (currListing, next) {
 	          // create a new HousingListing entry 
             var currTime = Date.now();
-	          var newHousingListing = new HousingListing({description: currListing.description, image_URLs: currListing.images, address: currListing.address, lat: currListing.lat, lon: currListing.lon, timestamp: currTime});
+            var parsed_imageURLs = [];
+            for(var i=0; i< currListing.images.length; i++){
+              if(currListing.images[i] != undefined){
+                parsed_imageURLs.push(currListing.images[i].href);
+              }
+            }
+            console.log("PARSED IMAGE URLS ARE: ", parsed_imageURLs);
+	          var newHousingListing = new HousingListing({description: currListing.description, image_URLs: parsed_imageURLs, address: currListing.address, lat: currListing.lat, lon: currListing.lon, timestamp: currTime});
 	          newHousingListing.save(function(err){
 	            if(err)
 	              console.log("Couldn't save new housing listing: ", err);
@@ -166,6 +176,76 @@ exports.delete_all = function(req, res){
   // clears out your list so you can start from scratch
   HousingListing.remove({}, function(err) { 
       console.log('housing collection emptied');
+      res.redirect('/');
+  });
+};
+
+///////////////////////////CRAIGSLIST MODULE//////////////////////////////////////////////
+
+// craigslist module test
+exports.craigslistModuleTest = function(req, res){
+  // this parses the HTML list, which doesn't include things like images and geo coordinates
+  craigslist.getList('http://auburn.craigslist.org/apa/', function(error, listings) {
+    listings.forEach(function(listing) {
+      listing.title;
+      listing.description;
+      listing.url;
+    });
+  });
+}
+
+exports.asyncCraigslistModule = function(req, res){
+  var allListings = [];
+  var allListings_asObjects = [];
+  async.auto({
+      clearing_listings: function(callback){
+        // too old, delete all old ones and re-scrape
+        CraigslistObject.remove({}, function(err){
+          if(err)
+            console.log("Unable to purge CraigslistObject DB: ", err);
+          // if successful
+          callback(null);   
+        });
+      }, 
+      retrieving_listings: ["clearing_listings", function(callback){
+        // this parses the HTML list, which doesn't include things like images and geo coordinates
+        craigslist.getList('http://auburn.craigslist.org/apa/', function(error, listings) {
+          allListings = listings;
+          console.log("Listings are: ", listings[0]); 
+          callback(null);
+        });
+      }],
+      mapping_listings: ["retrieving_listings", function(callback){
+          async.map(allListings, function (currListing, next) {
+            // create a new HousingListing entry 
+            var currTime = Date.now();
+            var newCraigslistObject = new CraigslistObject({title: currListing.title, description: currListing.description, url: currListing.url, timestamp: currTime});
+            newCraigslistObject.save(function(err){
+              if(err)
+                console.log("Couldn't save new CraigslistObject: ", err);
+              allListings_asObjects.push(newCraigslistObject);
+              next(null);
+            });
+          }, function (err, results) {
+            // all done with each of them
+            callback(null, results);
+          });
+      }],
+      displaying_listings: ["mapping_listings", function(callback, results){
+        res.render('displayHousing', {title: "Housing", housingOptions: allListings});
+        callback(null, 'done');
+      }]
+  }, function (err, result) {
+      console.log("Finished async Craigslist Object scraping + displaying");   
+  });
+}
+
+
+// delete all Craigslist Objects
+exports.delete_all_CraigslistObjects = function(req, res){
+  // clears out your list so you can start from scratch
+  CraigslistObject.remove({}, function(err) { 
+      console.log('craigslist object collection emptied');
       res.redirect('/');
   });
 };

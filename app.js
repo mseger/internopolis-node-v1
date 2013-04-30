@@ -49,6 +49,7 @@ app.get('/roommates', Facebook.loginRequired({scope: scope}), roommates.displayS
 app.get('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.asyncRoommateCalculation);
 app.get('/housing', Facebook.loginRequired({scope: scope}), housing.asyncHouseScrape);
 app.get('/housing/delete_all', housing.delete_all);
+app.get('/craigslistobjects/delete_all', housing.delete_all_CraigslistObjects);
 app.get('/home', Facebook.loginRequired({scope: scope}), home.displayHome);
 
 // PUTS
@@ -61,6 +62,7 @@ app.post('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.
 app.get('/mapsTest', googleMapsTest.mapsTest2);
 app.get('/scrapiTest', scrapiTest.scrapiTest3);
 app.get('/asyncScrapeTest', housing.asyncHouseScrape);
+app.get('/housing/craigslistmodule', housing.craigslistModuleTest);
 
 
 http.createServer(app).listen(app.get('port'), function(){

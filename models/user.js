@@ -6,6 +6,8 @@ var UserSchema = new Schema({
 	friends: [],
 	roommate_matches: [], 
 	housing_listings: [],
+	starred_roommates: [],
+	starred_housingListings: [],
 	lastSearchedCity: String
 });
 

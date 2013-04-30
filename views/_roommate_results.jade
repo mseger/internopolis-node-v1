@@ -1,22 +1,22 @@
-h1 Your matches in #{currUser.lastSearchedCity}:
+h1 Your Matches:
+//h1 Your matches in #{currUser.lastSearchedCity}:
 .container
     .marketing
         p.marketing-byline Based on your survey results and Facebook friend network
 
         .row(style="margin-bottom: 20px")
             each match, i in matches
-                .span3(value=match._id, id="roommate-match", style="margin-bottom: 50px")
+                .well.span3(value=match._id, id="roommate-match", style="margin-bottom: 50px")
                     img(src="https://graph.facebook.com/"+"#{match.id}"+"/picture?type=large", id="match-pic")
                     br
                     center
                         h4 #{match.name}
-                        //a(href="https://facebook.com/" + "#{match.id}", target="_blank") #{match.name}
                         br
                         .btn-group
                             button.btn(class="goToMatchFB", value="#{match.id}")
                                 i.icon-thumbs-up
                             button.btn 
                                 i.icon-pencil
-                            button.btn 
+                            button.btn(class="addToFavoriteRoommates", value="#{match.id}")
                                 i.icon-plus
 

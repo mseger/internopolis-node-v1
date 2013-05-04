@@ -16,6 +16,24 @@ var linksManifest = {
         "$query": "#toc_rows a",
         "$each":{
           "href": "(attr href)"
+          }
+        },  
+      titles: {
+        "$query": ".pl a", 
+        "$each":{
+          "title": "(text)"
+        }
+      }, 
+      prices: {
+        "$query": ".itemprice", 
+        "$each": {
+          "price": "(text)"
+        }
+      }, 
+      area: {
+        "$query": ".itempnr small",
+        "$each": {
+          "area": "(text)"
         }
       }
     }
@@ -111,6 +129,7 @@ exports.asyncHouseScrape = function(req, res){
 			  api('apa/').get(function (err, json){
 			    if(err)
 			      console.log("Error using scrapi: ", err);
+          console.log("THE HOUSING LISTING IS: ", json);
 			    async.each(json.links, function(item, next){
 			    	var link = item.href;
 				     if((link != '#') && (link != undefined) && (link.length >28)){

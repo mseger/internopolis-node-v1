@@ -4,6 +4,14 @@ block content
     each option, i in housingOptions
         div.row(value=option, id="craigslist-object;", style="margin-top: 50px")
             div.span8.offset6.well
+                if option.title != undefined
+                    h2 Title: 
+                    | #{option.title.title}
+                    
+                if option.URL != undefined
+                    h2 URL: 
+                    | #{option.URL.link}
+
                 if option.address != undefined
                     h2 Address: 
                     | #{option.address}

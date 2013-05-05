@@ -1,6 +1,10 @@
 var mongoose = require('mongoose'), Schema = mongoose.Schema
 
 var HousingListingSchema = new Schema({
+	title: String, 
+	URL: String, 
+	price: String, 
+	area: String, 
 	description: String, 
 	image_URLs: [], 
 	address: String, 

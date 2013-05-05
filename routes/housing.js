@@ -22,23 +22,23 @@ var linksManifest = {
         "$query": ".pl a", 
         "$each":{
           "title": "(text)"
-        }
-      }, 
+          } 
+        }, 
       prices: {
         "$query": ".itemprice", 
         "$each": {
           "price": "(text)"
-        }
-      }, 
-      area: {
+          }
+        }, 
+      areas: {
         "$query": ".itempnr small",
         "$each": {
           "area": "(text)"
+          }
         }
       }
     }
-  }
-};
+  };
 
 // for each individual listing
 var individualManifest = {
@@ -71,33 +71,6 @@ var individualManifest = {
   }
 };
 
-// trying to refine our search and query each one for info 
-exports.houseScrape = function(req, res){
-  var api = scrapi(linksManifest);
-  api('apa/').get(function (err, json){
-    if(err)
-      console.log("Error using scrapi: ", err);
-    // if that goes through, sort through the links returned
-    for(var i=0; i<json.links.length; i++){
-      var link = json.links[i].href;
-      if((link != '#') && (link != undefined) && (link.length >28)){
-        // 28th character is the beginning of the listing-specific URL
-        var individualAPI = scrapi(individualManifest);
-        individualAPI(link.substring(28)).get(function (err, listingJSON){
-          if(err)
-            console.log("Error using second call of scrapi: ", err);
-
-          // create a new HousingListing entry 
-          var newHousingListing = new HousingListing({description: listingJSON.description, image_URLs: listingJSON.images, address: listingJSON.address, lat:listingJSON.lat, lon: listingJSON.lon});
-          newHousingListing.save(function(err){
-          	if(err)
-          		console.log("Unable to save new listing: ", err);
-          });
-        });
-      }
-    }
-  });
-}
 
 // using async to scrape and display properly 
 exports.asyncHouseScrape = function(req, res){
@@ -106,12 +79,12 @@ exports.asyncHouseScrape = function(req, res){
   async.auto({
       clearing_listings: function(callback){
         // if stored listings are recent enough, just surface those
-        var aListing = HousingListing.find().exec(function (err, listings){
+        var userListings = User.find({name: req.session.user.name}).populate("housing_listings").exec(function (err, user){
           if(err)
-            console.log("Unable to retrieve housing listings ", err); 
+            console.log("Unable to retrieve housing listings for current user: ", err); 
           var time = Date.now();
-          if((listings.length) >0 && time - listings[0].timestamp < 36000000){
-            res.render('displayHousing', {title: "Housing", housingOptions: listings});
+          if((user.housing_listings) != undefined && time - user.housing_listings[0].timestamp < 36000000){
+            res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings});
           }else{
             // too old, delete all old ones and re-scrape
             HousingListing.remove({}, function(err){
@@ -129,16 +102,33 @@ exports.asyncHouseScrape = function(req, res){
 			  api('apa/').get(function (err, json){
 			    if(err)
 			      console.log("Error using scrapi: ", err);
-          console.log("THE HOUSING LISTING IS: ", json);
-			    async.each(json.links, function(item, next){
-			    	var link = item.href;
+
+          // [link title price area]
+          var arr = [];
+          for (var i = 0; i < json.links.length; i++) {
+            arr.push({
+              link: json.links[i],
+              title: json.titles[i], 
+              price: json.prices[i], 
+              area: json.areas[i]
+            });
+          }
+
+			    async.each(arr, function(item, next){
+			    	var link = item.link.href;
 				     if((link != '#') && (link != undefined) && (link.length >28)){
 				        // 28th character is the beginning of the listing-specific URL
 				        var individualAPI = scrapi(individualManifest);
 				        individualAPI(link.substring(28)).get(function (err, listingJSON){
 				          if(err)
 				            console.log("Error using second call of scrapi: ", err);
-				          allListings.push(listingJSON);
+                  allListings.push({
+                    link: item.link,
+                    title: item.title,
+                    price: item.price, 
+                    area: item.area,
+                    listingJSON: listingJSON
+                  });
 				          next();
 				        });   
 				      }else{
@@ -153,13 +143,13 @@ exports.asyncHouseScrape = function(req, res){
 	          // create a new HousingListing entry 
             var currTime = Date.now();
             var parsed_imageURLs = [];
-            for(var i=0; i< currListing.images.length; i++){
-              if(currListing.images[i] != undefined){
-                parsed_imageURLs.push(currListing.images[i].href);
+            for(var i=0; i< currListing.listingJSON.images.length; i++){
+              if(currListing.listingJSON.images[i] != undefined){
+                parsed_imageURLs.push(currListing.listingJSON.images[i].href);
               }
             }
             // NEED TO ADD LOGIC IN HERE TO PREVENT REPEAT LISTINGS
-	          var newHousingListing = new HousingListing({description: currListing.description, image_URLs: parsed_imageURLs, address: currListing.address, lat: currListing.lat, lon: currListing.lon, timestamp: currTime});
+	          var newHousingListing = new HousingListing({title: currListing.title, URL: currListing.link, price: currListing.price, area: currListing.area, description: currListing.listingJSON.description, image_URLs: parsed_imageURLs, address: currListing.listingJSON.address, lat: currListing.listingJSON.lat, lon: currListing.listingJSON.lon, timestamp: currTime});
 	          newHousingListing.save(function(err){
 	            if(err)
 	              console.log("Couldn't save new housing listing: ", err);
@@ -172,18 +162,17 @@ exports.asyncHouseScrape = function(req, res){
           });
 			}],
       updating_user_listings: ["mapping_listings", function(callback){
-        var currentUser = User.findOne({name: req.session.user.name}).exec(function (err, currUser){
-          currUser.housing_listings = allListings_asObjects;
-          currUser.save(function (err2){
+        User.findOneAndUpdate({name: req.session.user.name}, {housing_listings: allListings_asObjects}).exec(function (err, currUser){
             if(err)
-              console.log("Unable to save housing listings for user", err2);
+              console.log("Unable to save housing listings for user", err);
             callback(null);
-          });
         });
       }],
       displaying_listings: ["updating_user_listings", function(callback, results){
-        res.render('displayHousing', {title: "Housing", housingOptions: allListings});
-        callback(null, 'done');
+        var currUser = User.findOne({name: req.session.user.name}).populate("housing_listings").exec(function (err, user){
+          res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings});
+          callback(null, 'done');
+        });
       }]
   }, function (err, result) {
       console.log("Finished async house scraping + displaying");   
@@ -217,11 +206,12 @@ exports.addStarredHousingListing = function(req, res){
 // delete all housing listings
 exports.delete_all = function(req, res){
   // clears out your list so you can start from scratch
-  HousingListing.remove({}, function(err) { 
+  HousingListing.remove().exec(function(err) { 
       console.log('housing collection emptied');
       res.redirect('/');
   });
 };
+
 
 ///////////////////////////CRAIGSLIST MODULE//////////////////////////////////////////////
 

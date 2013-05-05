@@ -9,6 +9,7 @@ var express = require('express')
   , path = require('path')
   , splash = require('./routes/splash')
   , home = require('./routes/home')
+  , group = require('./routes/group')
   , roommates = require('./routes/roommates')
   , googleMapsTest = require('./routes/googleMapsTest')
   , scrapiTest = require('./routes/scrapiTest')
@@ -58,6 +59,7 @@ app.post('/login', Facebook.loginRequired({scope: scope}), user.login);
 app.post('/logout', Facebook.loginRequired(), user.logout);
 app.post('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.asyncRoommateCalculation);
 app.post('/starred_roommates/add', Facebook.loginRequired({scope: scope}), roommates.addStarredRoommate);
+app.post('/group/new', Facebook.loginRequired({scope: scope}), group.create);
 
 // TESTS
 app.get('/mapsTest', googleMapsTest.mapsTest2);

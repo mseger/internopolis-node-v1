@@ -11,7 +11,7 @@ exports.login = function (req, res) {
 	  				req.session.user = user;
 	  				res.redirect('/home');
 		  		}else{
-		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url, friends: friendData.data, roommate_matches: [], housing_listings: [], starred_roommates: [], starred_housingListings: [], lastSearchedCity: ""});
+		  			var loggedInUser = new User({name: data.name, profPicURL: picData.data.url, friends: friendData.data, groups: [], roommate_matches: [], housing_listings: [], starred_roommates: [], starred_housingListings: [], lastSearchedCity: ""});
 		  			loggedInUser.save(function (err){
 			  			if(err)
 			  				console.log("Unable to save new user.");

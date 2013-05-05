@@ -8,9 +8,10 @@ var async = require('async')
 
 
 exports.displayHome = function(req, res){
-	var currUser = User.findOne({name: req.session.user.name}).populate('starred_roommates').exec(function (err, user){
+	var currUser = User.findOne({name: req.session.user.name}).populate(['starred_roommates', 'groups']).exec(function (err, user){
+		console.log("THE USER'S GROUPS ARE: ", user.groups);
 		if(err)
 			console.log("Unable to display user's home: ", err);
-		res.render('home', {title: "Home", starred_roommates: user.starred_roommates});
+		res.render('home', {title: "Home", starred_roommates: user.starred_roommates, groups: user.groups});
 	});
 }

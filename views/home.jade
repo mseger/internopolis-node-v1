@@ -4,7 +4,7 @@ block content
     title= title
 
     div.row.container-narrow
-        div.span5.well(id="group-create", style="margin-top: 30px; margin-left:230px")
+        div.span5.offset3.well(id="group-create", style="margin-top: 30px;")
             form(name="new-group", action="/group/new", method="post")
                 h3 Create New Group 
                 label Name: 
@@ -12,12 +12,14 @@ block content
                 button.btn(type="submit", id="roommate-search-submit")
                     i.icon-plus
                     |  Create Group
-        div.span4.offset8.well(id="my-groups", style="margin-top: 30px")
-            h3 My Groups
-            each group, j in groups
-                | #{group.group_name}
-                br
-                br
+        div.span4.well(id="my-groups", style="margin-top: 30px")
+                h3 My Groups
+                each group, j in groups
+                    | #{group.group_name}
+                    div.offset1
+                        button.btn(class="removeGroup", value="#{group._id}")
+                            icon.icon-remove
+                        br
     .row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
         h2 Welcome to Your Internopolis
         br

@@ -22,3 +22,45 @@ exports.create = function(req, res){
 		});
 	});
 };
+
+// delete all groups
+exports.delete_all = function(req, res){
+	// clears out your list so you can start from scratch
+	Group.remove({}, function(err) { 
+   		console.log('group collection removed');
+   		res.redirect('/');
+	});
+};
+
+// delete all groups for logged in user
+exports.delete_currUser_groups = function(req, res){
+	User.findOneAndUpdate({name: req.session.user.name}, {groups: []}).exec(function (err, user){
+		if(err)
+			console.log("Error deleting current user's groups: ", err);
+		res.redirect('/');
+	});
+}
+
+// remove an individual group from a user's list of groups
+exports.removeIndividualGroup = function(req, res){
+	User.findOne({name: req.session.user.name}).exec(function (err, user){
+		var groupList = user.groups;
+		var index = groupList.indexOf(req.body.id);
+		groupList.splice(index, 1);
+		user.groups = groupList; 
+		user.save(function (err){
+			console.log("Inside of here!!!");
+			if(err)
+				console.log("Unable to remove group: ", err);
+			res.redirect('/home');
+		})
+	})
+
+}
+
+
+
+
+
+
+

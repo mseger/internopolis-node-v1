@@ -53,6 +53,8 @@ app.get('/housing/delete_all', housing.delete_all);
 app.get('/craigslistobjects/delete_all', housing.delete_all_CraigslistObjects);
 app.get('/home', Facebook.loginRequired({scope: scope}), home.displayHome);
 app.get('/FBOnlyUsers/delete_all', user.delete_all_FBOnlyUsers);
+app.get('/groups/delete_all', group.delete_all);
+app.get('/groups/deleteAll_currUser', Facebook.loginRequired({scope: scope}), group.delete_currUser_groups);
 
 // PUTS
 app.post('/login', Facebook.loginRequired({scope: scope}), user.login);
@@ -60,6 +62,7 @@ app.post('/logout', Facebook.loginRequired(), user.logout);
 app.post('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.asyncRoommateCalculation);
 app.post('/starred_roommates/add', Facebook.loginRequired({scope: scope}), roommates.addStarredRoommate);
 app.post('/group/new', Facebook.loginRequired({scope: scope}), group.create);
+app.post('/group/:id/remove', Facebook.loginRequired({scope: scope}), group.removeIndividualGroup);
 
 // TESTS
 app.get('/mapsTest', googleMapsTest.mapsTest2);

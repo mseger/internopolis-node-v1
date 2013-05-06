@@ -15,7 +15,11 @@ block content
         div.span4.well(id="my-groups", style="margin-top: 30px")
                 h3 My Groups
                 each group, j in groups
-                    | #{group.group_name}
+                    h4 #{group.group_name}
+                    br
+                    | Members
+                    each member, k in group.members
+                        img(src="#{member.profPicURL}", style="width:100px")
                     div.offset1
                         button.btn(class="removeGroup", value="#{group._id}")
                             icon.icon-remove

@@ -17,7 +17,7 @@ exports.create = function(req, res){
 			user.save(function (err){
 				if(err)
 					console.log("Could not add new group to user's groups: ", err);
-			res.redirect('/home');
+				res.redirect('/home');
 			});
 		});
 	});
@@ -49,7 +49,6 @@ exports.removeIndividualGroup = function(req, res){
 		groupList.splice(index, 1);
 		user.groups = groupList; 
 		user.save(function (err){
-			console.log("Inside of here!!!");
 			if(err)
 				console.log("Unable to remove group: ", err);
 			res.redirect('/home');

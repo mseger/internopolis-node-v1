@@ -79,11 +79,11 @@ exports.asyncHouseScrape = function(req, res){
   async.auto({
       clearing_listings: function(callback){
         // if stored listings are recent enough, just surface those
-        var userListings = User.find({name: req.session.user.name}).populate("housing_listings").exec(function (err, user){
+        var userListings = User.findOne({name: req.session.user.name}).populate('housing_listings').exec(function (err, user){
           if(err)
             console.log("Unable to retrieve housing listings for current user: ", err); 
           var time = Date.now();
-          if((user.housing_listings) != undefined && time - user.housing_listings[0].timestamp < 36000000){
+          if((user.housing_listings).length != 0 && time - user.housing_listings[0].timestamp < 36000000){
             res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings});
           }else{
             // too old, delete all old ones and re-scrape
@@ -108,7 +108,7 @@ exports.asyncHouseScrape = function(req, res){
           for (var i = 0; i < json.links.length; i++) {
             arr.push({
               link: json.links[i],
-              title: json.titles[i], 
+              listing_title: json.titles[i], 
               price: json.prices[i], 
               area: json.areas[i]
             });
@@ -124,7 +124,7 @@ exports.asyncHouseScrape = function(req, res){
 				            console.log("Error using second call of scrapi: ", err);
                   allListings.push({
                     link: item.link,
-                    title: item.title,
+                    listing_title: item.title,
                     price: item.price, 
                     area: item.area,
                     listingJSON: listingJSON
@@ -149,11 +149,36 @@ exports.asyncHouseScrape = function(req, res){
               }
             }
             // NEED TO ADD LOGIC IN HERE TO PREVENT REPEAT LISTINGS
-	          var newHousingListing = new HousingListing({title: currListing.title, URL: currListing.link, price: currListing.price, area: currListing.area, description: currListing.listingJSON.description, image_URLs: parsed_imageURLs, address: currListing.listingJSON.address, lat: currListing.listingJSON.lat, lon: currListing.listingJSON.lon, timestamp: currTime});
-	          newHousingListing.save(function(err){
+
+            // trying to beat my race condition here
+            var currListingTitle = ""; 
+            var currListingURL = ""; 
+            var currListingPrice = ""; 
+            var currListingArea = ""; 
+
+            if(currListing.listing_title != undefined){
+              currListingTitle = currListing.listing_title.title; 
+            }
+
+            if(currListing.link != undefined){
+              currListingTitle = currListing.link.href; 
+            }
+
+            if(currListing.price != undefined){
+              currListingPrice = currListing.price.price; 
+            }
+
+            if(currListing.area != undefined){
+              currListingArea = currListing.area.area;
+            }
+
+
+	          var newHousingListing = new HousingListing({listing_title: currListingTitle, listing_URL: currListingURL, price: currListingPrice, area: currListingArea, description: currListing.listingJSON.description, image_URLs: parsed_imageURLs, address: currListing.listingJSON.address, lat: currListing.listingJSON.lat, lon: currListing.listingJSON.lon, timestamp: currTime});
+            newHousingListing.save(function(err){
 	            if(err)
 	              console.log("Couldn't save new housing listing: ", err);
 	            allListings_asObjects.push(newHousingListing);
+              console.log("NEW HOUSING LISTING IS: ", newHousingListing);
               next(null);
             });
           }, function (err, results) {
@@ -165,7 +190,11 @@ exports.asyncHouseScrape = function(req, res){
         User.findOneAndUpdate({name: req.session.user.name}, {housing_listings: allListings_asObjects}).exec(function (err, currUser){
             if(err)
               console.log("Unable to save housing listings for user", err);
-            callback(null);
+            currUser.save(function (err){
+              if(err)
+                console.log("Unable to save current user: ", err);
+              callback(null);
+            });
         });
       }],
       displaying_listings: ["updating_user_listings", function(callback, results){

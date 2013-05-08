@@ -4,6 +4,28 @@ h1.offset6 Your Matches:
     .marketing
         p.marketing-byline Based on your survey results and Facebook friend network
 
+        #my_modal.well(style='display: none; margin: 1em;')
+            a.my_modal_close(href='#', style='float: right; padding: 0 0.4em;') ×
+            h4 Add Listing to:
+            form(name="roommate-criteria", action="/roommates/search", method="post")
+                label House Parties: 
+                input(type="checkbox", name="house-parties")
+                br
+                br
+                label House Parties: 
+                input(type="checkbox", name="house-parties")
+            code .overlay {outline: none}.
+            form
+            button.btn.btn-alert.my_modal_close Close
+        .btn-group
+            button.btn
+                i.icon-thumbs-up
+            button.btn 
+                i.icon-pencil
+            button.btn.my_modal_open
+                i.icon-plus
+
+
         .row(style="margin-bottom: 20px")
             each match, i in matches
                 .well.span3(value=match._id, id="roommate-match", style="margin-bottom: 50px")
@@ -19,4 +41,7 @@ h1.offset6 Your Matches:
                                 i.icon-pencil
                             button.btn(class="addToStarredRoommates", value="#{match.FBID}")
                                 i.icon-plus
+
+
+
 

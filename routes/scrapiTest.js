@@ -108,6 +108,10 @@ exports.scrapiTest3 = function(req, res){
 }
 
 
+exports.displayModalTest = function(req, res){
+  res.render('modalTesting');
+}
+
 
 
 

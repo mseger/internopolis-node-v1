@@ -1,0 +1,63 @@
+!!! 5
+html(lang='en')
+head
+    meta(charset='utf-8')
+    title Title
+    // Include jquery 
+    script(src='http://code.jquery.com/jquery-1.8.2.min.js')
+    // Include jQuery Popup Overlay 
+    script(type="text/javascript", src="/javascripts/jquery.popupoverlay.js")
+    // Include bootstrap
+    link(href="//netdna.bootstrapcdn.com/bootswatch/2.3.0/journal/bootstrap.min.css", rel="stylesheet")
+
+    style
+      /* Add these styles once per website */
+      .popup_background {
+      z-index: 2000; /* any number */
+      }
+      .popup_wrapper {
+      z-index: 2001; /* any number + 1 */
+      }
+      /* Add inline-block support for IE7 */
+      .popup_align,
+      .popup_content {
+      *display: inline;
+      *zoom: 1;
+      }
+  body
+
+    .container
+        section
+            .page-header
+              h1 jQuery Popup Overlay
+              p jQuery plugin for responsive and accessible modal overlays and tooltips.
+            h2 Demo
+            p
+              button.my_modal_open.btn.btn-large.btn-success Open modal
+              button.my_tooltip_open.btn.btn-large.btn-success Open tooltip
+            #my_modal.well(style='display: none; margin: 1em;')
+              a.my_modal_close(href='#', style='float: right; padding: 0 0.4em;') ×
+              h4 Modal overlay example
+              p
+                | Try to change the width and height of browser window, or to rotate your tablet device, and also try to navigate with
+                kbd Tab
+                | key.
+              p
+                | You can close the dialog by pressing the
+                kbd Esc
+                | key, or by clicking on the background outside the content area, or by clicking on the Close button.
+              p
+                | If you don't want to show the outline around the container when focused, you can remove it with
+                code .overlay {outline: none}.
+              form
+                button.btn.btn-alert.my_modal_close Close
+              script
+                $(function() {
+                $('#my_modal').popup();
+                });
+            #my_tooltip.well
+              a.my_tooltip_close(href='#', style='float: right; padding: 0 0.4em;') ×
+              h4 Tooltip example
+              p Tooltip content will be centered.
+              p You can set the offset by changing the margins in CSS.
+

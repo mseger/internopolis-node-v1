@@ -69,6 +69,7 @@ app.get('/mapsTest', googleMapsTest.mapsTest2);
 app.get('/scrapiTest', scrapiTest.scrapiTest3);
 app.get('/asyncScrapeTest', housing.asyncHouseScrape);
 app.get('/housing/craigslistmodule', housing.craigslistModuleTest);
+app.get('/modalTesting', scrapiTest.displayModalTest);
 
 
 http.createServer(app).listen(app.get('port'), function(){

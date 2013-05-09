@@ -76,6 +76,8 @@ var individualManifest = {
 exports.asyncHouseScrape = function(req, res){
 	var allListings = [];
   var allListings_asObjects = [];
+  var arr = [];
+
   async.auto({
       clearing_listings: function(callback){
         // if stored listings are recent enough, just surface those
@@ -97,6 +99,7 @@ exports.asyncHouseScrape = function(req, res){
         });
       }, 
       scraping_listings: ["clearing_listings", function(callback){
+
         // using scrapi, scrape list of links in listing
         var api = scrapi(linksManifest);
 			  api('apa/').get(function (err, json){
@@ -104,7 +107,6 @@ exports.asyncHouseScrape = function(req, res){
 			      console.log("Error using scrapi: ", err);
 
           // [link title price area]
-          var arr = [];
           for (var i = 0; i < json.links.length; i++) {
             arr.push({
               link: json.links[i],
@@ -113,32 +115,38 @@ exports.asyncHouseScrape = function(req, res){
               area: json.areas[i]
             });
           }
+          callback(null);
+        });
+      }], 
+      individual_listings: ["scraping_listings", function(callback){
 
-			    async.each(arr, function(item, next){
-			    	var link = item.link.href;
-				     if((link != '#') && (link != undefined) && (link.length >28)){
-			        // 28th character is the beginning of the listing-specific URL
-			        var individualAPI = scrapi(individualManifest);
-			        individualAPI(link).get(function (err, listingJSON){
-			          if(err)
-			            console.log("Error using second call of scrapi: ", err);
-                allListings.push({
-                  link: item.link,
-                  listing_title: item.title,
-                  price: item.price, 
-                  area: item.area,
-                  listingJSON: listingJSON
-                });
-			          next();
-				        });   
-				      }else{
-				      	next();
-				      }
+		    // using scrapi to dig into each one of the individual listings
+        async.each(arr, function(item, next){
+		    	var link = item.link.href;
+			     if((link != '#') && (link != undefined)){
+		        // 28th character is the beginning of the listing-specific URL
+		        var individualAPI = scrapi(individualManifest);
+            console.log("THE LINK IS: ", link);
+
+		        individualAPI(link).get(function (err, listingJSON){
+		          if(err)
+		            console.log("Error using second call of scrapi: ", err);
+              allListings.push({
+                link: item.link,
+                listing_title: item.title,
+                price: item.price, 
+                area: item.area,
+                listingJSON: listingJSON
+              });
+		          next();
+			        });   
+			      }else{
+			      	next();
+			      }
 			    }, 
 			    callback);
-			  });
 			}],
-			mapping_listings: ["scraping_listings", function(callback){
+			mapping_listings: ["individual_listings", function(callback){
 			    async.map(allListings, function (currListing, next) {
 	          // create a new HousingListing entry 
             var currTime = Date.now();
@@ -197,6 +205,7 @@ exports.asyncHouseScrape = function(req, res){
         });
       }],
       displaying_listings: ["updating_user_listings", function(callback, results){
+
         var currUser = User.findOne({name: req.session.user.name}).populate("housing_listings").exec(function (err, user){
           res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings});
           callback(null, 'done');

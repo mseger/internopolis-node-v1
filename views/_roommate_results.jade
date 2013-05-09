@@ -8,22 +8,19 @@ h1.offset6 Your Matches:
             a.my_modal_close(href='#', style='float: right; padding: 0 0.4em;') ×
             h4 Add Listing to:
             form(name="roommate-criteria", action="/roommates/search", method="post")
-                label House Parties: 
-                input(type="checkbox", name="house-parties")
-                br
-                br
-                label House Parties: 
-                input(type="checkbox", name="house-parties")
-            code .overlay {outline: none}.
-            form
-            button.btn.btn-alert.my_modal_close Close
-        .btn-group
-            button.btn
-                i.icon-thumbs-up
-            button.btn 
-                i.icon-pencil
-            button.btn.my_modal_open
-                i.icon-plus
+                if groups != undefined && groups.length > 0
+                    .btn-group
+                        label Choose Group  
+                          button.btn.dropdown-toggle(data-toggle='dropdown')
+                            span.caret
+                          ul.dropdown-menu
+                            each group, j in groups
+                                li 
+                                    a(href="", value="#{group._id}") #{group.group_name}
+                else
+                    | No Groups to Choose From- to add one go to the 
+                    a(href="/home") Home 
+                    | tab
 
 
         .row(style="margin-bottom: 20px")
@@ -39,7 +36,7 @@ h1.offset6 Your Matches:
                                 i.icon-thumbs-up
                             button.btn 
                                 i.icon-pencil
-                            button.btn(class="addToStarredRoommates", value="#{match.FBID}")
+                            button.btn.my_modal_open(value="#{match.FBID}")
                                 i.icon-plus
 
 

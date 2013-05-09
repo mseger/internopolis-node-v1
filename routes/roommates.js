@@ -3,10 +3,10 @@ var FBOnlyUser = require('../models/user_FB_only')
 var async = require('async')
 
 exports.displaySurvey = function(req, res){
-	User.findOne({name: req.session.user.name}).populate('roommate_matches').exec(function (err, user){
+	User.findOne({name: req.session.user.name}).populate(['roommate_matches', 'groups']).exec(function (err, user){
 		if(err)
 			console.log("Unable to display user's home: ", err);
-		res.render('roommates', {title: "Roommate Finder", currUser: req.session.user, matches: user.roommate_matches});
+		res.render('roommates', {title: "Roommate Finder", currUser: req.session.user, matches: user.roommate_matches, groups: user.groups});
 	});
 }
 
@@ -28,11 +28,13 @@ exports.calculateAndDisplayOptions = function(req, res){
 exports.asyncRoommateCalculation = function(req, res){
 	var roommateFits = [];
 	var currUser; 
+	var user_groups; 
   	async.auto({
 	      calculating_matches: function(callback){
 		 	// look up user, look up their friends
-			currUser = User.findOne({name: req.session.user.name}).exec(function (req2, user){
+			currUser = User.findOne({name: req.session.user.name}).populate('groups').exec(function (req2, user){
 				var friendList = user.friends; 
+				user_groups = user.groups;
 				async.each(friendList, function(item, next){
 					if(item.location && item.location.name.split(',')[0] == req.body.city){
 						var newFBUser = new FBOnlyUser({name: item.name, FBID: item.id, profileURL: item.link, profPicURL: "https://graph.facebook.com/"+ item.id +"/picture?type=large", location: item.location.name});
@@ -58,7 +60,7 @@ exports.asyncRoommateCalculation = function(req, res){
 		  	});
 		  }], 
 	      displaying_matches: ["saving_matches", function(callback, results){
-	        res.render('roommates', {title: "Roommate Matches", currUser: req.session.user, matches: roommateFits});
+	        res.render('roommates', {title: "Roommate Matches", currUser: req.session.user, matches: roommateFits, groups: user_groups});
 	        callback(null, 'done');
 	      }]
 	  }, function (err, result) {

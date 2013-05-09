@@ -5,8 +5,7 @@ block content
         div.row(value=option, id="craigslist-object;", style="margin-top: 50px")
             div.span8.offset6.well
                 h2 Go to Listing: 
-                | #{option.listing_title}
-
+                a(href="http://sfbay.craigslist.org" + "#{option.listing_title}", target="_blank")  http://sfbay.craigslist.org#{option.listing_title}
                 h2 Area: 
                 | #{option.area}
 

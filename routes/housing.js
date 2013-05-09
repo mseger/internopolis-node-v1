@@ -25,13 +25,13 @@ var linksManifest = {
           } 
         }, 
       prices: {
-        "$query": ".itemprice", 
+        "$query": ".pnr .price", 
         "$each": {
           "price": "(text)"
           }
         }, 
       areas: {
-        "$query": ".itempnr small",
+        "$query": ".pnr small",
         "$each": {
           "area": "(text)"
           }
@@ -126,7 +126,6 @@ exports.asyncHouseScrape = function(req, res){
 			     if((link != '#') && (link != undefined)){
 		        // 28th character is the beginning of the listing-specific URL
 		        var individualAPI = scrapi(individualManifest);
-            console.log("THE LINK IS: ", link);
 
 		        individualAPI(link).get(function (err, listingJSON){
 		          if(err)

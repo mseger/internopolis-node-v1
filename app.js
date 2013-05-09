@@ -50,7 +50,6 @@ app.get('/roommates', Facebook.loginRequired({scope: scope}), roommates.displayS
 app.get('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.asyncRoommateCalculation);
 app.get('/housing', Facebook.loginRequired({scope: scope}), housing.asyncHouseScrape);
 app.get('/housing/delete_all', housing.delete_all);
-app.get('/craigslistobjects/delete_all', housing.delete_all_CraigslistObjects);
 app.get('/home', Facebook.loginRequired({scope: scope}), home.displayHome);
 app.get('/FBOnlyUsers/delete_all', user.delete_all_FBOnlyUsers);
 app.get('/groups/delete_all', group.delete_all);
@@ -68,7 +67,6 @@ app.post('/group/:id/remove', Facebook.loginRequired({scope: scope}), group.remo
 app.get('/mapsTest', googleMapsTest.mapsTest2);
 app.get('/scrapiTest', scrapiTest.scrapiTest3);
 app.get('/asyncScrapeTest', housing.asyncHouseScrape);
-app.get('/housing/craigslistmodule', housing.craigslistModuleTest);
 app.get('/modalTesting', scrapiTest.displayModalTest);
 
 

@@ -91,6 +91,11 @@ exports.addStarredRoommate = function(req, res){
 	});
 }
 
+// star a roommate and add it to a particular group
+exports.addToGroup = function(req, res){
+	
+}
+
 
 
 

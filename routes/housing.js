@@ -42,7 +42,7 @@ var linksManifest = {
 
 // for each individual listing
 var individualManifest = {
-  "base": "http://sfbay.craigslist.org/",
+  "base": "http://sfbay.craigslist.org",
   "spec": {
     "*": {
       description: {
@@ -117,19 +117,19 @@ exports.asyncHouseScrape = function(req, res){
 			    async.each(arr, function(item, next){
 			    	var link = item.link.href;
 				     if((link != '#') && (link != undefined) && (link.length >28)){
-				        // 28th character is the beginning of the listing-specific URL
-				        var individualAPI = scrapi(individualManifest);
-				        individualAPI(link.substring(28)).get(function (err, listingJSON){
-				          if(err)
-				            console.log("Error using second call of scrapi: ", err);
-                  allListings.push({
-                    link: item.link,
-                    listing_title: item.title,
-                    price: item.price, 
-                    area: item.area,
-                    listingJSON: listingJSON
-                  });
-				          next();
+			        // 28th character is the beginning of the listing-specific URL
+			        var individualAPI = scrapi(individualManifest);
+			        individualAPI(link).get(function (err, listingJSON){
+			          if(err)
+			            console.log("Error using second call of scrapi: ", err);
+                allListings.push({
+                  link: item.link,
+                  listing_title: item.title,
+                  price: item.price, 
+                  area: item.area,
+                  listingJSON: listingJSON
+                });
+			          next();
 				        });   
 				      }else{
 				      	next();
@@ -178,7 +178,6 @@ exports.asyncHouseScrape = function(req, res){
 	            if(err)
 	              console.log("Couldn't save new housing listing: ", err);
 	            allListings_asObjects.push(newHousingListing);
-              console.log("NEW HOUSING LISTING IS: ", newHousingListing);
               next(null);
             });
           }, function (err, results) {
@@ -242,75 +241,6 @@ exports.delete_all = function(req, res){
 };
 
 
-///////////////////////////CRAIGSLIST MODULE//////////////////////////////////////////////
-
-// craigslist module test
-exports.craigslistModuleTest = function(req, res){
-  // this parses the HTML list, which doesn't include things like images and geo coordinates
-  craigslist.getList('http://auburn.craigslist.org/apa/', function(error, listings) {
-    listings.forEach(function(listing) {
-      listing.title;
-      listing.description;
-      listing.url;
-    });
-  });
-}
-
-exports.asyncCraigslistModule = function(req, res){
-  var allListings = [];
-  var allListings_asObjects = [];
-  async.auto({
-      clearing_listings: function(callback){
-        // too old, delete all old ones and re-scrape
-        CraigslistObject.remove({}, function(err){
-          if(err)
-            console.log("Unable to purge CraigslistObject DB: ", err);
-          // if successful
-          callback(null);   
-        });
-      }, 
-      retrieving_listings: ["clearing_listings", function(callback){
-        // this parses the HTML list, which doesn't include things like images and geo coordinates
-        craigslist.getList('http://auburn.craigslist.org/apa/', function(error, listings) {
-          allListings = listings;
-          console.log("Listings are: ", listings[0]); 
-          callback(null);
-        });
-      }],
-      mapping_listings: ["retrieving_listings", function(callback){
-          async.map(allListings, function (currListing, next) {
-            // create a new HousingListing entry 
-            var currTime = Date.now();
-            var newCraigslistObject = new CraigslistObject({title: currListing.title, description: currListing.description, url: currListing.url, timestamp: currTime});
-            newCraigslistObject.save(function(err){
-              if(err)
-                console.log("Couldn't save new CraigslistObject: ", err);
-              allListings_asObjects.push(newCraigslistObject);
-              next(null);
-            });
-          }, function (err, results) {
-            // all done with each of them
-            callback(null, results);
-          });
-      }],
-      displaying_listings: ["mapping_listings", function(callback, results){
-        res.render('displayHousing', {title: "Housing", housingOptions: allListings});
-        callback(null, 'done');
-      }]
-  }, function (err, result) {
-      console.log("Finished async Craigslist Object scraping + displaying");   
-  });
-}
-
-
-// delete all Craigslist Objects
-exports.delete_all_CraigslistObjects = function(req, res){
-  // clears out your list so you can start from scratch
-  CraigslistObject.remove({}, function(err) { 
-      console.log('craigslist object collection emptied');
-      res.redirect('/');
-  });
-};
 
 
 

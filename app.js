@@ -62,6 +62,7 @@ app.post('/roommates/search', Facebook.loginRequired({scope: scope}), roommates.
 app.post('/starred_roommates/add', Facebook.loginRequired({scope: scope}), roommates.addStarredRoommate);
 app.post('/group/new', Facebook.loginRequired({scope: scope}), group.create);
 app.post('/group/:id/remove', Facebook.loginRequired({scope: scope}), group.removeIndividualGroup);
+app.post('/starred_roommates/addToGroup', Facebook.loginRequired({scope: scope}), group.addStarredRoommate);
 
 // TESTS
 app.get('/mapsTest', googleMapsTest.mapsTest2);

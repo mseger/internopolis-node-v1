@@ -15,8 +15,8 @@ h1.offset6 Your Matches:
                             span.caret
                           ul.dropdown-menu
                             each group, j in groups
-                                li 
-                                    a(href="", value="#{group._id}") #{group.group_name}
+                                li
+                                    a(class="addStarredToGroup", value="#{group._id}", href="") #{group.group_name}
                 else
                     | No Groups to Choose From- to add one go to the 
                     a(href="/home") Home 
@@ -36,7 +36,7 @@ h1.offset6 Your Matches:
                                 i.icon-thumbs-up
                             button.btn 
                                 i.icon-pencil
-                            button.btn.my_modal_open(value="#{match.FBID}")
+                            button.btn.my_modal_open(class= "setUserGlobal", value="#{match.FBID}")
                                 i.icon-plus
 
 

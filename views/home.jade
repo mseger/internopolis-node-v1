@@ -24,6 +24,12 @@ block content
                         button.btn(class="removeGroup", value="#{group._id}")
                             icon.icon-remove
                         br
+                    | Starred Roommates
+                    br
+                    each roommate, z in group.group_starredRoommates
+                        if roommate != null
+                            img(src="#{roommate.profPicURL}", style="width:100px; height: 100px")
+                        
     .row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
         h2 Welcome to Your Internopolis
         br

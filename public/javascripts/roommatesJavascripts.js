@@ -9,6 +9,16 @@ $(function () {
     return false;
   })
 
+  $('.addStarredToGroup').click(function (){
+  	$.post("/starred_roommates/addToGroup", {group_id: this.getAttribute("value"), user_FBID: window.userFBID});
+  	alert("Starred Roommate Match and Added to your Group");
+  	return false;
+  })
+
+  $('.setUserGlobal').click(function (){
+    window.userFBID = this.value;
+  })
+
 
   $('#my_modal').popup();
 

@@ -1,6 +1,7 @@
 var User = require('../models/user')
 var Group = require('../models/group')
 var async = require('async')
+var FBOnlyUser = require('../models/user_FB_only')
 
 exports.create = function(req, res){
 	// create, save, post, and update new room
@@ -54,7 +55,29 @@ exports.removeIndividualGroup = function(req, res){
 			res.redirect('/home');
 		})
 	})
+}
 
+// star a roommate and add it to a particular group
+exports.addStarredRoommate = function(req, res){
+	currGroup = Group.findOne({_id: req.body.group_id}).populate('group_starredRoommates').exec(function (err, group){
+		if(err)
+			console.log("Could not find the requested group to add starred roommate: ", err);
+		var starredRoommates = group.group_starredRoommates; 
+
+		// look up or create an FBOnlyUser
+		var fbUser = FBOnlyUser.findOne({FBID: req.body.user_FBID}).exec(function (err, FBUser){
+			if(err)
+				console.log("Error in retrieving FBUser: ", err);
+			starredRoommates.push(FBUser);
+			group.starred_roommates = starredRoommates;
+			group.save(function (err){
+				if(err)
+					console.log("Unable to save updated group: ", err);
+				console.log("Successfully added starred roommate to group!");
+				res.redirect('/roommates');
+			});
+		});
+	});
 }
 
 

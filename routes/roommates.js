@@ -1,4 +1,4 @@
-var User = require('../models/User')
+var User = require('../models/user')
 var FBOnlyUser = require('../models/user_FB_only')
 var async = require('async')
 

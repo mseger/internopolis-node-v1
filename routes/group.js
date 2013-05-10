@@ -1,5 +1,5 @@
-var User = require('../models/User')
-var Group = require('../models/Group')
+var User = require('../models/user')
+var Group = require('../models/group')
 var async = require('async')
 
 exports.create = function(req, res){

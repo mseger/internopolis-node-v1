@@ -2,7 +2,7 @@ var scrapi = require('scrapi')
 var async = require('async')
 var HousingListing = require('../models/housingListing')
 var CraigslistObject = require('../models/craigslistObject')
-var User = require('../models/User')
+var User = require('../models/user')
 var craigslist = require('craigslist');
 
 ///////////////////////////MANUAL SCRAPING//////////////////////////////////////////////

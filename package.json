@@ -12,7 +12,9 @@
     "fb": "0.1.0", 
     "async": "*", 
     "facebook-node-sdk": "*", 
-    "scrapi": "*"
+    "scrapi": "*", 
+    "googlemaps": "*", 
+    "craigslist": "*"
   },
     "engines": {
     "node": "0.8.14 ",

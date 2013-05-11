@@ -2,6 +2,7 @@ var User = require('../models/user')
 var Group = require('../models/group')
 var async = require('async')
 var FBOnlyUser = require('../models/user_FB_only')
+var HousingListing = require('../models/housingListing');
 
 exports.create = function(req, res){
 	// create, save, post, and update new room
@@ -80,6 +81,28 @@ exports.addStarredRoommate = function(req, res){
 	});
 }
 
+// star a housing listing and add it to a particular group
+exports.addStarredHousingListing = function(req, res){
+	currGroup = Group.findOne({_id: req.body.group_id}).populate('group_starredHousing').exec(function (err, group){
+		if(err)
+			console.log("Could not find the requested group to add starred roommate: ", err);
+		var starredHousing = group.group_starredHousing; 
+
+		// look up or create an FBOnlyUser
+		var theListing= HousingListing.findOne({_id: req.body.housing_id}).exec(function (err, listing){
+			if(err)
+				console.log("Error in retrieving HousingListing: ", err);
+			starredHousing.push(listing);
+			group.group_starredHousing= starredHousing;
+			group.save(function (err){
+				if(err)
+					console.log("Unable to save updated group: ", err);
+				console.log("Successfully added starred housing listing to group!");
+				res.redirect('/housing');
+			});
+		});
+	});
+}
 
 
 

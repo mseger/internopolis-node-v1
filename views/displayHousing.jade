@@ -1,6 +1,19 @@
 extends layout
 
 block content
+    #my_modal.well(style='display: none; margin: 1em;')
+        a.my_modal_close(href='#', style='float: right; padding: 0 0.4em;') ×
+        h4 Add Listing to:
+        if groups != undefined && groups.length > 0
+            .btn-group
+                label Choose Group  
+                  button.btn.dropdown-toggle(data-toggle='dropdown')
+                    span.caret
+                  ul.dropdown-menu
+                    each group, j in groups
+                        li
+                            a(class="addStarredListingToGroup", value="#{group._id}", href="") #{group.group_name}
+    
     each option, i in housingOptions
         div.row(value=option, id="craigslist-object;", style="margin-top: 50px")
             div.span8.offset6.well
@@ -26,11 +39,17 @@ block content
                     each image, j in option.image_URLs
                         if option.image_URLs[j] != undefined
                             img(src="#{option.image_URLs[j]}", id="housing-listing-image")
-                br
+                            br
+                else
+                    | No Groups to Choose From- to add one go to the 
+                    a(href="/home") Home 
+                    | tab
+
+
                 .btn-group(style="margin-top:50px")
                     button.btn
                         i.icon-thumbs-up
                     button.btn 
                         i.icon-pencil
-                    button.btn(class="addToStarredHousing", value="#{option.description}")
+                    button.btn.my_modal_open(class="setHousingGlobal", value="#{option._id}")
                         i.icon-plus

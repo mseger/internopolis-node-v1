@@ -81,12 +81,12 @@ exports.asyncHouseScrape = function(req, res){
   async.auto({
       clearing_listings: function(callback){
         // if stored listings are recent enough, just surface those
-        var userListings = User.findOne({name: req.session.user.name}).populate('housing_listings').exec(function (err, user){
+        var userListings = User.findOne({name: req.session.user.name}).populate(['housing_listings', 'groups']).exec(function (err, user){
           if(err)
             console.log("Unable to retrieve housing listings for current user: ", err); 
           var time = Date.now();
           if((user.housing_listings).length != 0 && time - user.housing_listings[0].timestamp < 36000000){
-            res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings});
+            res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings, groups: user.groups});
           }else{
             // too old, delete all old ones and re-scrape
             HousingListing.remove({}, function(err){
@@ -205,8 +205,8 @@ exports.asyncHouseScrape = function(req, res){
       }],
       displaying_listings: ["updating_user_listings", function(callback, results){
 
-        var currUser = User.findOne({name: req.session.user.name}).populate("housing_listings").exec(function (err, user){
-          res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings});
+        var currUser = User.findOne({name: req.session.user.name}).populate(['housing_listings', 'groups']).exec(function (err, user){
+          res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings, groups: user.groups});
           callback(null, 'done');
         });
       }]

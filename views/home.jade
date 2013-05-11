@@ -29,6 +29,12 @@ block content
                     each roommate, z in group.group_starredRoommates
                         if roommate != null
                             img(src="#{roommate.profPicURL}", style="width:100px; height: 100px")
+
+                    | Starred Housing
+                    br
+                    each listing, x in group.group_starredHousing
+                        if listing != null
+                            | #{listing.description}
                         
     .row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
         h2 Welcome to Your Internopolis

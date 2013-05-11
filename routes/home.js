@@ -19,7 +19,7 @@ exports.displayHome = function(req, res){
 				next();
 			});
 		}, function(){
-			res.render('home', {title: "Home", starred_roommates: user.starred_roommates, groups: allGroups});
+			res.render('home', {title: "Home", starred_roommates: user.starred_roommates, groups: allGroups, starred_housing: user.starred_housing});
 		});
 	});
 }

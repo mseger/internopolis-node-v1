@@ -1,0 +1,13 @@
+html(xmlns:fb='https://www.facebook.com/2008/fbml')
+body
+    script(src='http://connect.facebook.net/en_US/all.js')
+    #fb-root
+    script
+      // assume we are already logged in
+      FB.init({appId: 514685761900234, xfbml: true, cookie: true});
+      FB.ui({
+      method: 'send',
+      to: 100003129971591, 
+      name: 'Making the Hard Parts of Internships Easy',
+      link: 'http://internopolis.herokuapp.com',
+      });

@@ -3,11 +3,6 @@ var Group = require('../models/group')
 var FBOnlyUser = require('../models/user_FB_only')
 var async = require('async')
 
-/*exports.displayHome = function(req, res){
-	res.render('home', {title: "Home"});
-}*/
-
-
 exports.displayHome = function(req, res){
 	var allGroups = [];
 	var currUser = User.findOne({name: req.session.user.name}).populate(['starred_roommates', 'groups']).exec(function (err, user){
@@ -19,7 +14,7 @@ exports.displayHome = function(req, res){
 				next();
 			});
 		}, function(){
-			res.render('home', {title: "Home", starred_roommates: user.starred_roommates, groups: allGroups, starred_housing: user.starred_housing});
+			res.render('home', {curr_user: user, title: "Home", starred_roommates: user.starred_roommates, groups: allGroups, starred_housing: user.starred_housing});
 		});
 	});
 }

@@ -70,7 +70,7 @@ app.get('/mapsTest', googleMapsTest.mapsTest2);
 app.get('/scrapiTest', scrapiTest.scrapiTest3);
 app.get('/asyncScrapeTest', housing.asyncHouseScrape);
 app.get('/modalTesting', scrapiTest.displayModalTest);
- 
+app.get('/fbInviteTest', Facebook.loginRequired({scope: scope}), group.fbInviteTest); 
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

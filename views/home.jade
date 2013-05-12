@@ -12,9 +12,33 @@ block content
                 button.btn(type="submit", id="roommate-search-submit")
                     i.icon-plus
                     |  Create Group
+
+        #invite_modal.well(style='display: none; margin: 1em;')
+            a.invite_modal_close(href='#', style='float: right; padding: 0 0.4em;') ×
+            form(name="inviteFBFriends", action="/group/inviteFBFriend", method="post")
+                .btn-group
+                    label Invite Facebook Friend to Group  
+                    input(type="text", name="friend_name", placeholder= "Name")
+                    button.btn(type="submit") 
+                        i.icon-search
+                        | Search
+            br      
+            form(name="inviteNonFBFriends", action="/group/inviteNonFBFriend", method="post")
+                .btn-group        
+                    label Not a Facebook Friend? No problem!
+                    input(type="text", name="friend_email", placeholder = "Email Address")
+                    button.btn(type="submit")
+                        i.icon-plus
+                        | Invite  
+
+                        
+
         div.span4.well(id="my-groups", style="margin-top: 30px")
                 h3 My Groups
                 each group, j in groups
+                    button.btn.invite_modal_open(type="submit", class="setGlobalInviteVar", value="#{group._id}")
+                        i.icon-user
+                        |  Invite Friends to Group
                     h4 #{group.group_name}
                     br
                     | Members
@@ -29,7 +53,7 @@ block content
                     each roommate, z in group.group_starredRoommates
                         if roommate != null
                             img(src="#{roommate.profPicURL}", style="width:100px; height: 100px")
-
+                    br  
                     | Starred Housing
                     br
                     each listing, x in group.group_starredHousing

@@ -104,6 +104,16 @@ exports.addStarredHousingListing = function(req, res){
 	});
 }
 
+exports.fbInviteTest = function(req, res){
+	res.render('fbInviteTest');
+}
+
+// add your Facebook friends to the group (or, eventually, a non-FB friend via email)
+exports.inviteFBFriend = function(req, res){
+	
+
+}
+
 
 
 

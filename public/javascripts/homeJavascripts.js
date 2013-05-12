@@ -5,4 +5,11 @@ $(function () {
     document.location.reload(true);
     return false;
   })
+
+  $('.setGlobalInviteVar').click(function (){
+  	window.group = this.value;
+  });
+
+  $('#invite_modal').popup();
+
 })

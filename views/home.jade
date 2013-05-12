@@ -13,17 +13,31 @@ block content
                     i.icon-plus
                     |  Create Group
 
+        #fb_message_modal.well(style='display: none; margin: 1em;')
+            a.fb_message_modal_close(href="#", style='float: right; padding: 0 0.4em;') × 
+                script(src='http://connect.facebook.net/en_US/all.js')
+                script
+                  // assume we are already logged in
+                  FB.init({appId: process.env.FACEBOOK_APPID, xfbml: true, cookie: false});
+                  FB.ui({
+                      method: 'send',
+                      display: 'popup',
+                      to: 100003129971591, 
+                      name: 'Making the Hard Parts of Internships Easy',
+                      link: 'http://internopolis.herokuapp.com', // REALLY NEED THE GROUP ID HERE, WILL HAVE TO COME IN THE JAVASCRIPT
+                  });
+
         #invite_modal.well(style='display: none; margin: 1em;')
             a.invite_modal_close(href='#', style='float: right; padding: 0 0.4em;') ×
             form(name="inviteFBFriends", action="/group/inviteFBFriend", method="post")
                 .btn-group
                     label Invite Facebook Friend to Group  
                     input(type="text", name="friend_name", placeholder= "Name")
-                    button.btn(type="submit") 
+                    button.btn.fb_message_modal_open(type="submit") 
                         i.icon-search
                         | Search
             br      
-            form(name="inviteNonFBFriends", action="/group/inviteNonFBFriend", method="post")
+            form(name="sendInviteEmail", class="sendInviteEmail")
                 .btn-group        
                     label Not a Facebook Friend? No problem!
                     input(type="text", name="friend_email", placeholder = "Email Address")
@@ -31,7 +45,6 @@ block content
                         i.icon-plus
                         | Invite  
 
-                        
 
         div.span4.well(id="my-groups", style="margin-top: 30px")
                 h3 My Groups

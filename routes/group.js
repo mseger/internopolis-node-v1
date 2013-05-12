@@ -4,6 +4,15 @@ var async = require('async')
 var FBOnlyUser = require('../models/user_FB_only')
 var HousingListing = require('../models/housingListing');
 
+exports.display = function(req, res){
+	Group.findOne({_id: req.body.groupID}).populate(['creator', 'members', 'group_starredRoommates', 'group_starredHousing']).exec(function (err, group){
+		if(err)
+			console.log("Couldn't find invidual group listing: ", err);
+		res.render('individualGroupPage', {title: group.group_name, group: group});
+	})
+}
+
+
 exports.create = function(req, res){
 	// create, save, post, and update new room
 	User.findOne({name: req.session.user.name}).exec(function (err, user){

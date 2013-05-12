@@ -4,14 +4,6 @@ block content
     title= title
 
     div.row.container-narrow
-        div.span5.offset3.well(id="group-create", style="margin-top: 30px;")
-            form(name="new-group", action="/group/new", method="post")
-                h3 Create New Group 
-                label Name: 
-                input(type="text", name="group_name")
-                button.btn(type="submit", id="roommate-search-submit")
-                    i.icon-plus
-                    |  Create Group
 
         #fb_message_modal.well(style='display: none; margin: 1em;')
             a.fb_message_modal_close(href="#", style='float: right; padding: 0 0.4em;') × 
@@ -46,15 +38,12 @@ block content
                         | Invite  
 
 
-        div.span4.well(id="my-groups", style="margin-top: 30px")
-                h3 My Groups
-                each group, j in groups
+        div.span4.offset5.well(id="my-groups", style="margin-top: 30px")
+                h3 #{group.group_name}
                     button.btn.invite_modal_open(type="submit", class="setGlobalInviteVar", value="#{group._id}")
                         i.icon-user
                         |  Invite Friends to Group
                     h4 #{group.group_name}
-                    form(name="goToGroup", action="/group/" + "#{group._id}", method="post")
-                        button.btn(type="submit", value="#{group._id}", name="groupID") Go To Group 
                     br
                     | Members
                     each member, k in group.members
@@ -74,20 +63,3 @@ block content
                     each listing, x in group.group_starredHousing
                         if listing != null
                             | #{listing.description}
-                        
-    .row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
-        h2 Welcome to Your Internopolis
-        br
-        h4 Your personal pinboard of housing and roommate listings. 
-        | Your current starred listings are:  
-    .row(style="margin-top: 50px; margin-bottom: 20px; text-align: center; margin-left: 100px")
-        each roommate, i in starred_roommates
-            .well.span3(value=roommate, id="starred-roommate", style="margin-bottom: 30px")
-                img(src="#{roommate.profPicURL}", style="width:200px; height:200px")
-                br
-                center
-                    h4 #{roommate.name}
-
-
-
-

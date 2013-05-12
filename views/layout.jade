@@ -6,6 +6,10 @@ html
     script(type="text/javascript", src="/javascripts/jquery.popupoverlay.js")
     script(type='text/javascript', src='http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js')
     link(href="//netdna.bootstrapcdn.com/bootswatch/2.3.0/journal/bootstrap.min.css", rel="stylesheet")
+    //link(href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css', rel='stylesheet')
+    link(href='//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css', rel='stylesheet')
+    link(href='http://fonts.googleapis.com/css?family=Fascinate+Inline', rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Josefin+Slab', rel='stylesheet', type='text/css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(type="text/javascript", src="/javascripts/roommatesJavascripts.js")
     script(type="text/javascript", src="/javascripts/housingJavascripts.js")
@@ -18,7 +22,7 @@ html
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.brand(href='/') Internopolis
+          a.brand(href='/', style="font-family: 'Fascinate Inline', cursive;") Internopolis
           .nav-collapse.collapse
             ul.nav
               li.active
@@ -27,8 +31,6 @@ html
                 a(href='/housing') Housing
               li
                 a(href='/roommates') Roommates
-              li 
-                a(href='#management') Management
 
 
             form.navbar-form.pull-right(name="fb-login", action="/login", method="post")

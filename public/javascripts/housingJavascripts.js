@@ -12,6 +12,7 @@ $(function () {
   $('.addStarredListingToGroup').click(function(){
   	$.post("/starred_housing/addToGroup", {group_id: this.getAttribute("value"), housing_id: window.housingListing});
   	alert("Starred Roommate Match and Added to your Group");
+    $(this).parent.remove();
   	return false;
   })
 

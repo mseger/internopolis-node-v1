@@ -3,7 +3,7 @@ body {
   font-family: 'Josefin Slab', serif;
   padding-top: 60px;
   padding-bottom: 40px;
-  background-color: #9DDFAE;
+  background-color: #388E8E;
 }
 
 a {
@@ -11,7 +11,7 @@ a {
   color: #00B7FF;
 }
 
-h1, h2, h3, h4, h5{
+h1, h2, h3, h4, h5, .btn{
 	font-family: 'Josefin Slab', serif;
 }
 

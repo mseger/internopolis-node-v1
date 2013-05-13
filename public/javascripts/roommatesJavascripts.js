@@ -12,7 +12,6 @@ $(function () {
   $('.addStarredToGroup').click(function (){
   	$.post("/starred_roommates/addToGroup", {group_id: this.getAttribute("value"), user_FBID: window.userFBID});
   	alert("Starred Roommate Match and Added to your Group");
-    $(this).parent.remove();
   	return false;
   })
 

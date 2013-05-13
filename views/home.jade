@@ -4,9 +4,9 @@ block content
     title= title
 
     div.row.container-narrow
-        div.span5.offset3.well(id="group-create", style="margin-top: 30px;")
+        div.span3.offset3.well(id="group-create", style="margin-top: 30px;")
             form(name="new-group", action="/group/new", method="post")
-                h3 Create New Group 
+                h3 Create a New Group 
                 label Name: 
                 input(type="text", name="group_name")
                 button.btn(type="submit", id="roommate-search-submit")
@@ -37,41 +37,44 @@ block content
                         | Invite  
 
 
-        div.span4.well(id="my-groups", style="margin-top: 30px")
+        div.span7.well(id="my-groups", style="margin-top: 30px")
                 h3 My Groups
+                if groups.length == 0
+                    h4 No groups yet. Create one and invite your friends!
                 each group, j in groups
-                    button.btn.invite_modal_open(type="submit", class="setGlobalInviteVar", value="#{group._id}")
-                        i.icon-user
-                        |  Invite Friends to Group
-                    h4 #{group.group_name}
-                    form(name="goToGroup", action="/group/" + "#{group._id}", method="post")
-                        button.btn(type="submit", value="#{group._id}", name="groupID") Go To Group 
-                    br
-                    | Members
-                    each member, k in group.members
-                        img(src="#{member.profPicURL}", style="width:100px")
-                    div.offset1
-                        button.btn(class="removeGroup", value="#{group._id}")
+                    div.well(style="background-color: #CFCFCF")
+                        button.btn(href='#', class="removeGroup", value="#{group._id}", style='float: right; padding: 0 0.4em;')
                             icon.icon-remove
-                        br
-                    | Starred Roommates
-                    br
-                    each roommate, z in group.group_starredRoommates
-                        if roommate != null
-                            img(src="#{roommate.profPicURL}", style="width:100px; height: 100px")
-                    br  
-                    | Starred Housing
-                    br
-                    each listing, x in group.group_starredHousing
-                        if listing != null
-                            | #{listing.description}
-                        
-    .row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
+                        div.well
+                            h4   #{group.group_name}
+                            | #{group.members.length} members, #{group.group_starredRoommates.length} starred roommates, #{group.group_starredHousing.length} starred listings
+                            form(name="goToGroup", action="/group/" + "#{group._id}", method="post")
+                                button.btn(type="submit", value="#{group._id}", name="groupID") Go To Group 
+                        div.well
+                            h4 Members
+                            each member, k in group.members
+                                img(src="#{member.profPicURL}", style="width:100px")
+                            br
+                            br
+                            h4 Starred Roommates
+                            each roommate, z in group.group_starredRoommates
+                                if roommate != null
+                                    img(class="goToFB", src="#{roommate.profPicURL}", value="#{roommate.FBID}", style="width:100px; height: 100px;")
+                            br  
+                            h4 Starred Housing
+                            br
+                            each listing, x in group.group_starredHousing
+                                if listing != null
+                                    | #{listing.description}
+                            button.btn.invite_modal_open(type="submit", class="setGlobalInviteVar", value="#{group._id}")
+                                i.icon-user
+                                |  Invite Friends to Group
+                            
+    //.row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
         h2 Welcome to Your Internopolis
         br
         h4 Your personal pinboard of housing and roommate listings. 
-        | Your current starred listings are:  
-    .row(style="margin-top: 50px; margin-bottom: 20px; text-align: center; margin-left: 100px")
+    //.row(style="margin-top: 50px; margin-bottom: 20px; text-align: center; margin-left: 100px")
         each roommate, i in starred_roommates
             .well.span3(value=roommate, id="starred-roommate", style="margin-bottom: 30px")
                 img(src="#{roommate.profPicURL}", style="width:200px; height:200px")

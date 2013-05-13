@@ -6,6 +6,11 @@ $(function () {
     return false;
   })
 
+  $('.goToFB').click(function (){
+    console.log("THE VALUE IS: ", this.getAttribute("value"));
+    window.open("https://facebook.com/" + this.getAttribute("value"));
+  })
+
   $('.setGlobalInviteVar').click(function (){
   	window.group = this.value;
   });

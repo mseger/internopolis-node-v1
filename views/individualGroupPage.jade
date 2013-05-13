@@ -38,28 +38,59 @@ block content
                         | Invite  
 
 
-        div.span4.center.well(id="my-groups", style="margin-top: 30px")
+        div.span11.offset3.center.well(id="my-groups", style="margin-top: 30px")
                 h3 #{group.group_name}
-                    button.btn.invite_modal_open(type="submit", class="setGlobalInviteVar", value="#{group._id}")
-                        i.icon-user
-                        |  Invite Friends to Group
-                    h4 #{group.group_name}
-                    br
-                    | Members
-                    each member, k in group.members
-                        img(src="#{member.profPicURL}", style="width:100px")
-                    div.offset1
-                        button.btn(class="removeGroup", value="#{group._id}")
-                            icon.icon-remove
+                div.well(style="background-color: #CFCFCF")
+                    button.btn(href='#', class="removeGroup", value="#{group._id}", style='float: right; padding: 0 0.4em;')
+                        icon.icon-remove
+                    div.well
+                        h4   #{group.group_name}
+                        | #{group.members.length} members, #{group.group_starredRoommates.length} starred roommates, #{group.group_starredHousing.length} starred listings
+                        form(name="goToGroup", action="/group/" + "#{group._id}", method="post")
+                            button.btn(type="submit", value="#{group._id}", name="groupID") Go To Group 
+                    div.well
+                        h4 Members
+                        each member, k in group.members
+                            img(src="#{member.profPicURL}", style="width:100px")
+                        button.btn.invite_modal_open(type="submit", class="setGlobalInviteVar", value="#{group._id}", style="margin-left: 30px; font-size: 20px")
+                            i.icon-user
+                            |  Invite Friends 
+                            br
+                            | to Group
                         br
-                    | Starred Roommates
-                    br
-                    each roommate, z in group.group_starredRoommates
-                        if roommate != null
-                            img(src="#{roommate.profPicURL}", style="width:100px; height: 100px")
-                    br  
-                    | Starred Housing
-                    br
-                    each listing, x in group.group_starredHousing
-                        if listing != null
-                            | #{listing.description}
+                        br
+                        h4 Starred Roommates
+                        each roommate, z in group.group_starredRoommates
+                            if roommate != null
+                                img(class="goToFB", src="#{roommate.profPicURL}", value="#{roommate.FBID}", style="width:100px; height: 100px;")
+                        br 
+                        br 
+                        h4 Starred Housing
+                        br
+                        each listing, x in group.group_starredHousing
+                            if listing != null
+                                div.row(style="margin-bottom: 50px")
+                                    div.span3
+                                        | #{listing.description.substring(0,100)}
+                                        | ...  
+                                        br
+                                        a(href="http://sfbay.craigslist.org" + "#{listing.listing_title}", target="_blank") http://sfbay.craigslist.org + #{listing.listing_title}
+                                    div.span7
+                                        row
+                                            div.span2
+                                                if listing.image_URLs[0] != null                                       
+                                                    img(src="#{listing.image_URLs[0]}", style="width:150px; height: 150px")
+                                            div.span2  
+                                                if listing.image_URLs[1] != null
+                                                    img(src="#{listing.image_URLs[1]}", style="width:150px; height: 150px")
+                                            div.span2   
+                                                if listing.image_URLs[2] != null 
+                                                    img(src="#{listing.image_URLs[2]}", style="width:150px; height: 150px")
+       
+
+
+
+
+
+
+

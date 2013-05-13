@@ -14,42 +14,41 @@ block content
                         li
                             a(class="addStarredListingToGroup", value="#{group._id}", href="") #{group.group_name}
     
-    each option, i in housingOptions
-        div.row(value=option, id="craigslist-object;", style="margin-top: 50px")
-            div.span8.offset6.well
-                h2 Go to Listing: 
-                a(href="http://sfbay.craigslist.org" + "#{option.listing_title}", target="_blank")  http://sfbay.craigslist.org#{option.listing_title}
-                h2 Area: 
-                | #{option.area}
+    div.row.container-narrow
+        div.span11.offset3.center.well(style="margin-top: 30px")
+            each option, i in housingOptions
+                div.well(style="background-color: #CFCFCF")
+                    div.well
+                        div.row(value=option, id="craigslist-object;", style="margin-top: 50px; margin-left: 20px")
+                            span.span3
+                                h3 Go to Listing: 
+                                a(href="http://sfbay.craigslist.org" + "#{option.listing_title}", target="_blank")  http://sfbay.craigslist.org#{option.listing_title}
+                                h3 Area: 
+                                | #{option.area}
 
-                h2 Price:
-                | #{option.price}
-                    
-
-                if option.address != undefined
-                    h2 Address: 
-                    | #{option.address}
-                    br
-                    br
-                h2 Description: 
-                | #{option.description}
-                br
-                br
-                if option.image_URLs != undefined
-                    each image, j in option.image_URLs
-                        if option.image_URLs[j] != undefined
-                            img(src="#{option.image_URLs[j]}", id="housing-listing-image")
+                                h3 Price:
+                                | #{option.price}
+                                    
+                                if option.address != undefined
+                                    h3 Address: 
+                                    | #{option.address}
+                                    br
+                            span.span5.offset1.craigslistImages
+                                if option.image_URLs != undefined
+                                    if option.image_URLs[0] != undefined
+                                        img(src="#{option.image_URLs[0]}")
+                                    else
+                                        img(src="http://www.aobc.net/wp-content/uploads/2012/09/NotAvailable300.png", style="margin-left: 30px; width: 350px; height:270px")
                             br
-                else
-                    | No Groups to Choose From- to add one go to the 
-                    a(href="/home") Home 
-                    | tab
+                            div.span9
+                                h3 Description: 
+                                | #{option.description}
 
 
-                .btn-group(style="margin-top:50px")
-                    button.btn
-                        i.icon-thumbs-up
-                    button.btn 
-                        i.icon-pencil
-                    button.btn.my_modal_open(class="setHousingGlobal", value="#{option._id}")
-                        i.icon-plus
+                                .btn-group(style="margin-top:50px")
+                                    button.btn
+                                        i.icon-thumbs-up
+                                    button.btn 
+                                        i.icon-pencil
+                                    button.btn.my_modal_open(class="setHousingGlobal", value="#{option._id}")
+                                        i.icon-plus

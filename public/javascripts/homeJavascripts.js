@@ -7,7 +7,6 @@ $(function () {
   })
 
   $('.goToFB').click(function (){
-    console.log("THE VALUE IS: ", this.getAttribute("value"));
     window.open("https://facebook.com/" + this.getAttribute("value"));
   })
 

@@ -15,6 +15,10 @@ h1, h2, h3, h4, h5, .btn{
 	font-family: 'Josefin Slab', serif;
 }
 
+.splashIcons{
+	padding-left: 30px;
+	color: #388E8E;
+}
 
 #match-pic{  
 	width: 200px;
@@ -37,4 +41,8 @@ h1, h2, h3, h4, h5, .btn{
 .popup_align, .popup_content {
 	*display: inline;
 	*zoom: 1;
+}
+
+.craigslistImages{
+	vertical-align: top;
 }

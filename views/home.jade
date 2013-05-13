@@ -46,11 +46,16 @@ block content
                         button.btn(href='#', class="removeGroup", value="#{group._id}", style='float: right; padding: 0 0.4em;')
                             icon.icon-remove
                         div.well
-                            h4   #{group.group_name}
-                            | #{group.members.length} members, #{group.group_starredRoommates.length} starred roommates, #{group.group_starredHousing.length} starred listings
-                            form(name="goToGroup", action="/group/" + "#{group._id}", method="post")
-                                button.btn(type="submit", value="#{group._id}", name="groupID") Go To Group 
-                        div.well
+                            div.row
+                                div.span3
+                                    h4 #{group.group_name}
+                                    form(name="goToGroup", action="/group/" + "#{group._id}", method="post")
+                                        button.btn(type="submit", value="#{group._id}", name="groupID") Go To Group 
+                                div.span3.offset3(style="font-size: 22px; margin-top:-50px")
+                                    | #{group.members.length} members, #{group.group_starredRoommates.length} starred roommates, #{group.group_starredHousing.length} starred listings
+
+                            
+                        
                             h4 Members
                             each member, k in group.members
                                 img(src="#{member.profPicURL}", style="width:100px")
@@ -59,40 +64,7 @@ block content
                                 |  Invite Friends 
                                 br
                                 | to Group
-                            br
-                            br
-                            h4 Starred Roommates
-                            each roommate, z in group.group_starredRoommates
-                                if roommate != null
-                                    img(class="goToFB", src="#{roommate.profPicURL}", value="#{roommate.FBID}", style="width:100px; height: 100px;")
-                            br 
-                            br 
-                            h4 Starred Housing
-                            br
-                            each listing, x in group.group_starredHousing
-                                if listing != null
-                                    div.row
-                                        div.span3
-                                            | #{listing.description.substring(0,100)}
-                                            | ...  
-                                            br
-                                            a(href="http://sfbay.craigslist.org" + "#{listing.listing_title}", target="_blank") http://sfbay.craigslist.org + #{listing.listing_title}
-                                        div.span3
-                                            if listing.image_URLs.length > 0
-                                                img(src="#{listing.image_URLs[0]}")
                                     
-                            
-    //.row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
-        h2 Welcome to Your Internopolis
-        br
-        h4 Your personal pinboard of housing and roommate listings. 
-    //.row(style="margin-top: 50px; margin-bottom: 20px; text-align: center; margin-left: 100px")
-        each roommate, i in starred_roommates
-            .well.span3(value=roommate, id="starred-roommate", style="margin-bottom: 30px")
-                img(src="#{roommate.profPicURL}", style="width:200px; height:200px")
-                br
-                center
-                    h4 #{roommate.name}
 
 
 

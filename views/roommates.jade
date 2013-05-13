@@ -12,7 +12,7 @@ block content
 						i.icon-cog
 						| Log out
 
-			div.span5.well(id="roommate_search", style="margin-left:230px")
+			div.span3.well(id="roommate_search", style="margin-left:230px")
 				form(name="roommate-criteria", action="/roommates/search", method="post")
 					h3 Search for 
 					label City: 
@@ -36,6 +36,6 @@ block content
 						i.icon-search
 						|  Search
 
-		include _roommate_results
+			include _roommate_results
 
 

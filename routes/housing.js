@@ -85,7 +85,7 @@ exports.asyncHouseScrape = function(req, res){
           if(err)
             console.log("Unable to retrieve housing listings for current user: ", err); 
           var time = Date.now();
-          if((user.housing_listings).length != 0){
+          if((user.housing_listings).length != 0 && time - user.housing_listings[0].timestamp < 36000000){
             res.render('displayHousing', {title: "Housing", housingOptions: user.housing_listings, groups: user.groups});
           }else{
             // too old, delete all old ones and re-scrape

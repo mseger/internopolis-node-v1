@@ -54,21 +54,33 @@ block content
                             h4 Members
                             each member, k in group.members
                                 img(src="#{member.profPicURL}", style="width:100px")
+                            button.btn.invite_modal_open(type="submit", class="setGlobalInviteVar", value="#{group._id}", style="margin-left: 30px; font-size: 20px")
+                                i.icon-user
+                                |  Invite Friends 
+                                br
+                                | to Group
                             br
                             br
                             h4 Starred Roommates
                             each roommate, z in group.group_starredRoommates
                                 if roommate != null
                                     img(class="goToFB", src="#{roommate.profPicURL}", value="#{roommate.FBID}", style="width:100px; height: 100px;")
-                            br  
+                            br 
+                            br 
                             h4 Starred Housing
                             br
                             each listing, x in group.group_starredHousing
                                 if listing != null
-                                    | #{listing.description}
-                            button.btn.invite_modal_open(type="submit", class="setGlobalInviteVar", value="#{group._id}")
-                                i.icon-user
-                                |  Invite Friends to Group
+                                    div.row
+                                        div.span3
+                                            | #{listing.description.substring(0,100)}
+                                            | ...  
+                                            br
+                                            a(href="http://sfbay.craigslist.org" + "#{listing.listing_title}", target="_blank") http://sfbay.craigslist.org + #{listing.listing_title}
+                                        div.span3
+                                            if listing.image_URLs.length > 0
+                                                img(src="#{listing.image_URLs[0]}")
+                                    
                             
     //.row.span4.offset3(style="margin-top: 50px; margin-right: 100px;")
         h2 Welcome to Your Internopolis
